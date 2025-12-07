@@ -96,6 +96,3 @@ Project ready.
 ```
 
 * 新增憲法文件
-```bash
-/speckit.constitution 
-```
