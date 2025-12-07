@@ -53,6 +53,8 @@ Initialize Specify Project
 
 Project ready.
 
+Release v1.0.1 created for constitution metadata updates.
+
 ╭───────────────────────────────────── Agent Folder Security ──────────────────────────────────────╮
 │                                                                                                  │
 │  Some agents may store credentials, auth tokens, or other identifying and private artifacts in   │
