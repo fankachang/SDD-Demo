@@ -1,15 +1,15 @@
 <!--
 Sync Impact Report:
-- Version: 1.0.0 → 1.0.1 (patch: fill ratification/amendment metadata)
-- Modified principles: none (no policy language changes)
-- Added sections: none
+- Version: 1.0.1 → 1.1.0 (minor: add new non-negotiable principle)
+- Modified principles: added VI. Avoid Overdevelopment / Overdesign
+- Added sections: Core Principles → VI
 - Removed sections: none
 - Templates inspected / updated:
-	✅ .specify/templates/plan-template.md (checked + language note added)
-	✅ .specify/templates/spec-template.md (checked + language note added)
-	✅ .specify/templates/tasks-template.md (checked + language note added)
-	✅ .specify/templates/checklist-template.md (checked + language note added)
-	✅ .specify/templates/agent-file-template.md (checked + language note added)
+	✅ .specify/templates/plan-template.md (updated Constitution Check to reference new principle)
+	✅ .specify/templates/spec-template.md (checked)
+	✅ .specify/templates/tasks-template.md (checked)
+	✅ .specify/templates/checklist-template.md (checked)
+	✅ .specify/templates/agent-file-template.md (checked)
 - Follow-up TODOs: none
 -->
 
@@ -47,6 +47,18 @@ Follow the codebase's existing patterns and naming conventions. Use the project'
 
 Rationale: Stability of the technical stack matters. major version changes can create cascade-breaking changes across the repository.
 
+### VI. Avoid Overdevelopment and Overdesign (Non-Negotiable)
+
+Teams MUST NOT implement features, extensions, or architectural changes that exceed the explicit scope
+of the user's request or that introduce unnecessary complexity. Solutions MUST be the simplest robust
+implementation that satisfies the acceptance criteria and success metrics. Overly-engineered or speculative
+designs that are not justified by clear, documented requirements are forbidden unless explicitly approved by
+the user.
+
+Rationale: Overdevelopment and overdesign increase maintenance burden, introduce unnecessary risk,
+slow delivery, and violate the Minimal-Change Principle. In a brownfield project the priority is delivering
+measurable user value with minimal disruption.
+
 ## Change Classification
 
 ### Allowed Changes (with user request)
@@ -62,6 +74,8 @@ Rationale: Stability of the technical stack matters. major version changes can c
 - Changing coding patterns or conventions
 - Upgrading major versions of dependencies
 - Removing or reorganizing existing features
+- Overdevelopment or overdesign: building beyond the user's request or introducing unnecessary
+  complexity without explicit approval
 
 ## Development Workflow
 
@@ -92,4 +106,4 @@ Compliance: Every code change must be validated against these principles before 
 
 Emergency Override: The user can temporarily suspend the constitution for a specific request by stating "ignore constitution" or similar.
 
-**Version**: 1.0.1 | **Ratified**: 2025-12-07 | **Last Amended**: 2025-12-07
+**Version**: 1.1.0 | **Ratified**: 2025-12-07 | **Last Amended**: 2025-12-07
