@@ -1,5 +1,7 @@
 # Implementation Plan: [FEATURE]
 
+注意：除憲章外，使用者面向的規格與說明文件應以繁體中文 (zh-TW) 撰寫。
+
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 

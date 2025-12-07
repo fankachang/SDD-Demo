@@ -5,6 +5,8 @@ description: "Task list template for feature implementation"
 
 # Tasks: [FEATURE NAME]
 
+注意：除憲章外，使用者面向的規格與說明文件應以繁體中文 (zh-TW) 撰寫。
+
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 

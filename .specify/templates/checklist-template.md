@@ -1,5 +1,7 @@
 # [CHECKLIST TYPE] Checklist: [FEATURE NAME]
 
+注意：除憲章外，使用者面向的規格與說明文件應以繁體中文 (zh-TW) 撰寫。
+
 **Purpose**: [Brief description of what this checklist covers]
 **Created**: [DATE]
 **Feature**: [Link to spec.md or relevant documentation]

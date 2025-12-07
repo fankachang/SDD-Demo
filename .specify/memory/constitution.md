@@ -4,11 +4,12 @@ Sync Impact Report:
 - Modified principles: none (no policy language changes)
 - Added sections: none
 - Removed sections: none
-- Templates inspected: ✅ .specify/templates/plan-template.md
-	✅ .specify/templates/spec-template.md
-	✅ .specify/templates/tasks-template.md
-	✅ .specify/templates/checklist-template.md
-	✅ .specify/templates/agent-file-template.md
+- Templates inspected / updated:
+	✅ .specify/templates/plan-template.md (checked + language note added)
+	✅ .specify/templates/spec-template.md (checked + language note added)
+	✅ .specify/templates/tasks-template.md (checked + language note added)
+	✅ .specify/templates/checklist-template.md (checked + language note added)
+	✅ .specify/templates/agent-file-template.md (checked + language note added)
 - Follow-up TODOs: none
 -->
 
