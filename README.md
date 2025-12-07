@@ -98,3 +98,9 @@ Release v1.0.1 created for constitution metadata updates.
 ```
 
 * 新增憲法文件
+
+* 追加規則
+
+```bash
+/speckit.constitution  不要過度開發也不要過度設計
+```

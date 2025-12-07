@@ -1,5 +1,7 @@
 # Implementation Plan: [FEATURE]
 
+注意：除憲章外，使用者面向的規格與說明文件應以繁體中文 (zh-TW) 撰寫。
+
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
 
@@ -31,7 +33,18 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+The plan MUST explicitly confirm the following before Phase 0 research proceeds:
+
+- Respect the Brownfield Project: confirm the plan does not require refactoring or changes to
+  existing working code unless explicitly requested in the feature spec.
+- Minimal-Change Principle: confirm the plan is the minimal necessary to achieve acceptance
+  criteria and does not touch unrelated files or create broad-scope churn.
+- Avoid Overdevelopment / Overdesign: confirm the proposed design does not add functionality,
+  architectural changes, or speculative complexity beyond the user's explicit request. If it does,
+  provide an explicit justification and obtain user approval.
+
+If any gate is violated, the plan MUST include a short Complexity Tracking section justifying why
+the deviation is necessary and listing simpler alternatives that were rejected.
 
 ## Project Structure
 

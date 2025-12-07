@@ -1,5 +1,7 @@
 # Feature Specification: [FEATURE NAME]
 
+注意：除憲章外，使用者面向的規格與說明文件應以繁體中文 (zh-TW) 撰寫。
+
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
 **Status**: Draft  
