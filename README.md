@@ -86,3 +86,16 @@ Project ready.
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
 > 
 ```
+
+* 修改 AGENTS.md
+
+```bash
+* Except for the constitution, which MUST be in English, all specifications, agreements, and user-oriented documents MUST be written in Traditional Chinese (zh-TW).
+* When drafting the constitution, the context MUST be translated into "constitution_zhTW.md" and placed in the same directory (please note that file names are case-sensitive).
+* Git Log, Code annotations MUST be written in Traditional Chinese (zh-TW)
+```
+
+* 新增憲法文件
+```bash
+/speckit.constitution 
+```
