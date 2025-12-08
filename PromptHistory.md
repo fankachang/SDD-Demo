@@ -134,21 +134,40 @@ Release v1.0.1 created for constitution metadata updates.
   需要可以設定 發佈程式列表
   ```
 
+
 * 上述產生的檔案/目錄
   - Docs/需求說明.md — 需求說明草稿
   - specs/001-release-announcements/ — 範例規格與檢查清單（requirements.md、requirements-qa.merged.md 等）
   - AGENTS.md — Agent 規則與指引
 
+* 需求確認
+
+```bash
+/speckit.specify  #file:需求說明.md 
+```
+
 ### 釐清需求
 
-* 釐清需求 1
+* 釐清需求
 
   ```bash
   /speckit.clarify 
+
+  - Q1: Recommended: Option [B] - 以後端背景任務排程重試，可降低同步請求風險並利於擴充、觀察與重試控制。
+
+    Option	Description
+    A	在 UI 中允許對單一收件人即時手動重發（同步操作）
+    B	提供伺服器端「重試/重發」背景工作（排入佇列，由後端非同步處理）
+    C	MVP 不提供重發功能，只記錄失敗供稽核（不自動/手動重發）
+    Short	其他（短答 <=5 字）
+  ```
+  > B
+  ```bash
+  已更新檔案： spec.md
+  進度
+
+    * 問題數：1（已問並記錄）
+    * TODO 更新：掃描規格檔不明確處 已完成，逐一提問並整合答覆 進行中。
+
+  建議下一步：執行 /speckit.plan 以把已釐清的需求拆成實作任務與排程。是否要我現在開始產生實作計畫？
   ``` 
-  - Q1: 認證方式應採何種方式？ → A: 使用簡易 email/password 登入並以伺服器端 Session 管理（短期方案，未來可升級為 JWT/SSO）。
-  - Q2: 發送方式要採同步或非同步？ → A: 同步直接發送（透過 SMTP），API 呼叫會等候 SMTP 回應並回傳成功或失敗。
-  - Q3: 單次發佈預期最大收件人量為多少？ → A: 單次上限設為 <= 500 收件人（若超過需採分批或升級為非同步架構）。
-  - Q4: 同步發送時是否執行自動重試或重發機制？ → A: 否，採單次 SMTP 嘗試；系統預期使用者管理之收件地址均為有效，系統不做自動重試或回滾，僅記錄每位收件人的結果。
-  - Q5: 同步發送 API 最長等待 SMTP 回應的 timeout 要多少？ → A: API 同步發送 timeout 設為 30 秒（短期上限，避免長時間阻塞）。
-  - Q6: 是否在 MVP 驗證 "成功送達率 >= 98%"（SC-002）？ → A: 否。由使用者管理收件對象，MVP 不需驗證發送成功率或模擬失敗率。
