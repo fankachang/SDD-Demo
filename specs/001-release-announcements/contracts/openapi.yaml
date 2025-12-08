@@ -1,0 +1,229 @@
+openapi: 3.0.3
+info:
+  title: Release Announcements API
+  version: '0.1.0'
+  description: API for MVP release announcement flow (create -> preview -> send)
+servers:
+  - url: http://localhost:8000
+paths:
+  /auth/login:
+    post:
+      summary: Login (email/password)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: OK
+  /contacts:
+    get:
+      summary: List contacts
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: Created
+  /contacts/{id}:
+    put:
+      summary: Update contact
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete contact
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: Deleted
+  /programs:
+    get:
+      summary: List programs
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create program
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Program'
+      responses:
+        '201':
+          description: Created
+  /releases:
+    post:
+      summary: Create release (draft)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseCreate'
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: List releases
+      responses:
+        '200':
+          description: OK
+  /releases/{id}/preview:
+    get:
+      summary: Preview rendered email for release
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Preview content
+  /releases/{id}/send:
+    post:
+      summary: Send release synchronously (SMTP)
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RecipientInput'
+      responses:
+        '200':
+          description: Send result
+        '400':
+          description: Bad Request (e.g., >500 recipients)
+        '504':
+          description: Timeout
+  /send_logs:
+    get:
+      summary: List send logs
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        group:
+          type: string
+      required: [name, email]
+    Program:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+      required: [name]
+    ReleaseCreate:
+      type: object
+      properties:
+        program_id:
+          type: integer
+        version:
+          type: string
+        notes:
+          type: string
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipientInput'
+      required: [program_id, version, recipients]
+    RecipientInput:
+      type: object
+      properties:
+        email:
+          type: string
+        type:
+          type: string
+          enum: [to, cc, bcc]
+      required: [email, type]
+    Release:
+      type: object
+      properties:
+        id:
+          type: integer
+        program_id:
+          type: integer
+        version:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+          enum: [draft, previewed, sent]
+    SendLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        release_id:
+          type: integer
+        sent_at:
+          type: string
+          format: date-time
+        result:
+          type: string
+          enum: [success, failure, timeout]
+        detail:
+          type: string

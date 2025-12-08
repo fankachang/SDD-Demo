@@ -1,0 +1,9 @@
+fastapi>=0.100.0
+pydantic>=2.0.0
+uvicorn[standard]
+sqlalchemy
+alembic
+jinja2
+email-validator
+python-dotenv
+pytest
