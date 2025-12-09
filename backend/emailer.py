@@ -1,9 +1,9 @@
-import os
 import smtplib
 from email.message import EmailMessage
 from typing import List, Dict
 from jinja2 import Template
 import socket
+from .config import cfg
 
 
 def render_template(subject: str, body_template: str, context: Dict) -> Dict:
@@ -17,11 +17,11 @@ def send_synchronously(subject: str, body: str, recipients: List[Dict]) -> List[
 
     If SMTP configuration is absent, simulate success for local testing.
     """
-    host = os.getenv("SMTP_HOST")
-    port = int(os.getenv("SMTP_PORT", "0") or 0)
-    user = os.getenv("SMTP_USER")
-    password = os.getenv("SMTP_PASS")
-    timeout = int(os.getenv("SMTP_TIMEOUT", "30"))
+    host = cfg.SMTP_HOST
+    port = cfg.SMTP_PORT
+    user = cfg.SMTP_USER
+    password = cfg.SMTP_PASS
+    timeout = cfg.SMTP_TIMEOUT
 
     results = []
 

@@ -811,4 +811,34 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 ```bash
 我要把 SecretFilter 附加到 root logger，並在 mailer.py 使用 get_logger；接著 commit、push 並執行測試確認一切正常。
 
+已完成：
+
+  * 把 SecretFilter 附加到 root logger（於 main.py 的 startup 執行）。
+  * 在 mailer.py 加入 get_logger 並新增送信時的紀錄與例外紀錄。
+  * 提交並推送更新到 001-release-announcements，並執行測試：全部通過（8 passed）。
+
+下一步要我：
+
+  * 繼續 T045 的其他項目（例如建立 config.py 的測試或檢查日誌輸出沒有敏感資訊），或
+  * 開始準備 PR 的安全審查說明/變更摘要供 reviewers？
+
 ```
+> 1
+```bash
+我要先在待辦清單新增一項測試任務（進行中），接著新增測試檔案 backend/tests/test_config.py，最後執行 pytest 驗證。
+
+我要修改 SecretFilter.filter 使其在過濾時直接將已格式化訊息替換為遮蔽後的字串（可處理 format args），然後重新執行測試。
+
+已完成：
+
+  * 新增測試 test_config.py（驗證 redact_mapping 與 SecretFilter）；提交並執行測試。
+  * 全量測試通過：10 passed, 42 warnings。
+  * 在待辦清單將「Add config redaction tests」標為完成（T045 仍為進行中）。
+
+下一步要我：
+
+  * 撰寫一段 PR 用的「安全審查變更摘要」供 reviewers（包含已加入的 config.py、測試與日誌遮蔽），或
+  * 繼續 T045 的下一個子項（例如加入 CI 檢查或把 cfg 注入到其他模組）？
+
+```
+> 繼續，然後再完成時 Commit 
