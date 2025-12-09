@@ -584,3 +584,88 @@ Release v1.0.1 created for constitution metadata updates.
 
   ```
   > ok
+
+### 程式實作
+
+```bash
+/speckit.implement 
+```
+```bash
+
+我先建立執行計畫（TODO 清單），然後執行 repo 根目錄的 prerequisites 檢查腳本以取得必要路徑與文件清單。
+
+接著掃描 FEATURE_DIR 的 checklists/ 目錄並統計每個清單的完成度。
+
+我要在檔案上執行文字計數命令以計算 checklist 項目與完成數量。
+
+更新 TODO 清單，標記步驟 1 與 2 已完成，接著讀取必要文件。
+
+現在讀取 001-release-announcements 下的 tasks.md、plan.md 與其他可用文件以獲得實作上下文。
+
+我要新增一個包含 Python 與通用項目的 .gitignore，接著把 TODO 標記為已完成。
+
+我要在 tasks.md 中標記多個已完成的任務（T001/T002/T005/T006/T007/T008/T010/T011/T013/T016/T019/T024），並更新 TODO 狀態。接著會套用檔案變更。
+
+進度更新：
+
+  * 已執行 prerequisites、檢查並通過 checklists、讀取 feature 文件（tasks.md、plan.md、data-model.md、research.md、quickstart.md、contracts）、建立 .gitignore、解析 tasks.md 並標記多項已實作任務為完成（T001/T002/T004/T005/T006/T007/T008/T010/T011/T013/T016/T019/T024）。
+
+下一步：
+  * 我可以繼續自動執行 MVP 實作（Phase1 + Phase2 + User Story 1，對應 T001–T020 的剩餘未完成項目與補強），或僅產出要逐步實作的變更清單。要我繼續自動實作嗎？（yes/no）
+```
+> yes
+
+```bash
+我將新增 release service、API 路由、郵件模板與測試檔，並把 main.py 中的 routes 轉為註冊新 router，以完成 T015–T019、T017–T018。接著執行測試。
+
+我將：1) 更新 main.py 以註冊新的 releases 路由；2) 新增模板與測試檔；3) 更新 tasks.md 標記已完成項目。接著我會執行測試。
+
+我要設定 Python 環境並安裝測試相依套件（pytest、requests、httpx）。
+
+完成摘要：
+
+  * 已實作並測試（MVP scope T001–T020 的關鍵部分）：
+    * 新增 release_service.py（T015）
+    * 新增 releases.py 並在 main.py 註冊路由（T016、T019）
+    * 新增郵件模板 release_email.html（T017）
+    * 新增整合測試 test_release_preview.py 並在虛擬環境中通過（T018）
+    * 更新 tasks.md 標記已完成任務
+    * 建立並驗證 .gitignore
+
+測試：
+
+  * 我在專案虛擬環境中安裝了必要套件並執行測試：pytest → 所有新增測試通過（1 passed）。
+
+接下來建議（二選一）：
+
+  * 我可以繼續實作 User Story 2 的發送流程測試與更完整的錯誤處理（T021–T028），或
+  * 將目前變更整理成 commit 與 PR（需要我替你建立 PR 嗎？）
+
+要我接著做哪個（繼續實作 / 建 PR / 其他）？
+
+```
+> 繼續實作
+
+```bash
+我要新增 mailer service、更新 releases send 路由以使用該 service，並新增針對發送流程的測試（模擬成功/失敗）。這會修改 4 個檔案並標記 tasks.md。I'll apply the changes now.
+
+進度更新（小結）：
+
+  * 完成項目（US2 T021–T028）：新增 mailer.py、將 POST /releases/{id}/send 改為呼叫 mailer service、加入 test_send_flow.py（模擬成功/失敗），並在 tasks.md 標記對應任務為完成。
+  * 測試：在虛擬環境跑 pytest，全部通過（3 passed）。
+
+下一步建議（請選一）：
+
+  * 將變更 commit 並建立 PR（我可以替你產生 commit 與 PR），或
+  * 繼續實作 US3/US4（contacts/programs/send_logs API 與更多測試），或
+  * 我把目前變更整理成一個簡短的變更摘要並推送（如果你想先自行審閱）。
+
+你要我現在做哪一項？ (create PR / continue US3 / create push-only / other)
+```
+> 先 commit 後繼續實作
+
+```bash
+我要先把變更 commit 並推到遠端；接著開始實作 US3（contacts/programs）並新增路由與測試。
+
+
+```

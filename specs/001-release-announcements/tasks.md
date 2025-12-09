@@ -10,20 +10,20 @@ Feature 資料夾：`/specs/001-release-announcements`
 
 ## Phase 1: Setup（專案初始化）
 
-- [ ] T001 建立並確認開發虛擬環境與相依檔案（`backend/requirements.txt`）
-- [ ] T002 [P] 在 `backend/` 中建立或確認基本檔案：`backend/main.py`, `backend/db.py`, `backend/models.py`, `backend/schemas.py`, `backend/emailer.py`
+- [X] T001 建立並確認開發虛擬環境與相依檔案（`backend/requirements.txt`）
+- [X] T002 [P] 在 `backend/` 中建立或確認基本檔案：`backend/main.py`, `backend/db.py`, `backend/models.py`, `backend/schemas.py`, `backend/emailer.py`
 - [ ] T003 [P] 新增環境範本檔案 `backend/.env.example` 並記載必要環境變數（`SMTP_HOST` 等）
-- [ ] T004 新增或更新 `specs/001-release-announcements/tasks.md`（本檔）並提交版本控制
-- [ ] T005 [P] 在 repo 根目錄更新 README 或 quickstart 引導：`specs/001-release-announcements/quickstart.md`
+- [X] T004 新增或更新 `specs/001-release-announcements/tasks.md`（本檔）並提交版本控制
+- [X] T005 [P] 在 repo 根目錄更新 README 或 quickstart 引導：`specs/001-release-announcements/quickstart.md`
 
 ## Phase 2: Foundational（基礎建置 — 必須完成以解鎖各使用者故事）
 
-- [ ] T006 設計並在 `backend/models.py` 中建立核心資料模型：`User`, `Program`, `Contact`, `Release`, `ReleaseRecipient`, `SendLog`（依據 `specs/001-release-announcements/data-model.md`）
-- [ ] T007 建立 `backend/db.py` 的資料庫初始化與 session 管理函式，並在 `backend/alembic/` 初始化 migration（若採 Alembic，提供 migration 設定檔路徑）
-- [ ] T008 [P] 在 `backend/schemas.py` 實作 Pydantic schema（或 Pydantic v2 的 ConfigDict）對應於 models：`UserSchema`, `ProgramSchema`, `ContactSchema`, `ReleaseCreateSchema`, `RecipientInputSchema`, `SendLogSchema`
+- [X] T006 設計並在 `backend/models.py` 中建立核心資料模型：`User`, `Program`, `Contact`, `Release`, `ReleaseRecipient`, `SendLog`（依據 `specs/001-release-announcements/data-model.md`）
+- [X] T007 建立 `backend/db.py` 的資料庫初始化與 session 管理函式，並在 `backend/alembic/` 初始化 migration（若採 Alembic，提供 migration 設定檔路徑）
+- [X] T008 [P] 在 `backend/schemas.py` 實作 Pydantic schema（或 Pydantic v2 的 ConfigDict）對應於 models：`UserSchema`, `ProgramSchema`, `ContactSchema`, `ReleaseCreateSchema`, `RecipientInputSchema`, `SendLogSchema`
 - [ ] T009 實作簡易授權中介層 `backend/auth.py`（email/password 登入與 session 管理的 skeleton），並在 `backend/main.py` 註冊中介層
-- [ ] T010 在 `backend/emailer.py` 實作同步 SMTP 抽象（`send_email(to_list, cc, bcc, subject, body, timeout=30)`），並支援透過環境變數切換到本機模擬 SMTP
-- [ ] T011 在 `backend/main.py` 設定 API 路由註冊點與錯誤處理 middleware（含 400/504 處理邏輯）
+- [X] T010 在 `backend/emailer.py` 實作同步 SMTP 抽象（`send_email(to_list, cc, bcc, subject, body, timeout=30)`），並支援透過環境變數切換到本機模擬 SMTP
+- [X] T011 在 `backend/main.py` 設定 API 路由註冊點與錯誤處理 middleware（含 400/504 處理邏輯）
 - [ ] T012 新增 logging 與環境設定載入 `backend/config.py`（讀取 `DATABASE_URL`、SMTP 設定等）
 
 ---
@@ -34,13 +34,13 @@ Goal: 提供發佈者建立發佈草稿（程式、版本、說明）並在送�
 
 Independent Test: 在 API 或 UI 呼叫建立 release 並呼叫 preview endpoint，可回傳渲染後郵件標題與內容。
 
-- [ ] T013 [P] [US1] 在 `backend/models.py` 補實作 `Release` 與 `ReleaseRecipient` 欄位與關聯（若尚未完全實作）
+- [X] T013 [P] [US1] 在 `backend/models.py` 補實作 `Release` 與 `ReleaseRecipient` 欄位與關聯（若尚未完全實作）
 - [ ] T014 [P] [US1] 在 `backend/schemas.py` 新增 `ReleaseCreateSchema` 與 `ReleasePreviewSchema`（包含 recipients 快照格式）
-- [ ] T015 [US1] 在 `backend/services/release_service.py`（建立新檔）實作 Release CRUD 與 preview 渲染方法（`render_release_preview(release_id)`）
-- [ ] T016 [US1] 在 `backend/api/releases.py`（建立新檔）實作路由：`POST /releases`（建立 draft）、`GET /releases/{id}/preview`（回傳渲染後內容）
-- [ ] T017 [US1] 在 `backend/templates/release_email.html` 新增郵件模板（Jinja2）以供預覽與發送使用
-- [ ] T018 [US1] 在 `backend/tests/test_release_preview.py`（建立新檔）加入整合測試：建立 release -> 呼叫 preview -> 驗證回傳包含標題與 body（若使用測試請求）
-- [ ] T019 [US1] 在 `backend/main.py` 註冊 `backend/api/releases.py` 路由與相依注入（database session, config）
+- [X] T015 [US1] 在 `backend/services/release_service.py`（建立新檔）實作 Release CRUD 與 preview 渲染方法（`render_release_preview(release_id)`）
+- [X] T016 [US1] 在 `backend/api/releases.py`（建立新檔）實作路由：`POST /releases`（建立 draft）、`GET /releases/{id}/preview`（回傳渲染後內容）
+- [X] T017 [US1] 在 `backend/templates/release_email.html` 新增郵件模板（Jinja2）以供預覽與發送使用
+- [X] T018 [US1] 在 `backend/tests/test_release_preview.py`（建立新檔）加入整合測試：建立 release -> 呼叫 preview -> 驗證回傳包含標題與 body（若使用測試請求）
+- [X] T019 [US1] 在 `backend/main.py` 註冊 `backend/api/releases.py` 路由與相依注入（database session, config）
 - [ ] T020 [US1] [P] 新增範例 API 呼叫範本於 `specs/001-release-announcements/quickstart.md`（示範建立並預覽 release 的 curl 或 HTTPie 範例）
 
 ---
@@ -51,14 +51,14 @@ Goal: 於步驟三選擇 To/CC/BCC 收件人並執行同步發送，回傳即時
 
 Independent Test: 呼叫 `POST /releases/{id}/send` 並提供 recipients，API 回傳逐位結果且 `SendLog` 產生紀錄。
 
-- [ ] T021 [P] [US2] 在 `backend/schemas.py` 新增 `RecipientInputSchema` 與 `SendResultSchema`
-- [ ] T022 [P] [US2] 在 `backend/services/mailer.py`（建立新檔）實作 `send_release_synchronously(release_id, recipients)`，使用 `backend/emailer.py` 的 send_email 並對每位收件人記錄結果
-- [ ] T023 [US2] 在 `backend/api/releases.py` 補實作 `POST /releases/{id}/send` endpoint，包含 recipients 數量檢查（>500 回 400）與 30 秒 timeout 行為（逾時回 504）
-- [ ] T024 [US2] 在 `backend/models.py` 新增或確認 `SendLog` 模型結構，並在發送完成後寫入紀錄
-- [ ] T025 [US2] 在 `backend/tests/test_send_flow.py` 新增測試：模擬 SMTP 成功/失敗情境，驗證 API 回傳格式與 `SendLog` 內容
-- [ ] T026 [US2] 在 `backend/api/releases.py` 的 send 路由中導入背景重試註記（非馬上實作背景重試，但記錄失敗以便後續 background retry 使用）
-- [ ] T027 [US2] 在 `backend/templates/` 加入針對發送結果的簡潔日誌範本（視需求可選）
-- [ ] T028 [US2] [P] 在 `specs/001-release-announcements/contracts/openapi.yaml` 中補強 `POST /releases/{id}/send` 的 request/response 範例（若需契約測試使用）
+ [X] T021 [P] [US2] 在 `backend/schemas.py` 新增 `RecipientInputSchema` 與 `SendResultSchema`
+ [X] T022 [P] [US2] 在 `backend/services/mailer.py`（建立新檔）實作 `send_release_synchronously(release_id, recipients)`，使用 `backend/emailer.py` 的 send_email 並對每位收件人記錄結果
+ [X] T023 [US2] 在 `backend/api/releases.py` 補實作 `POST /releases/{id}/send` endpoint，包含 recipients 數量檢查（>500 回 400）與 30 秒 timeout 行為（逾時回 504）
+ [X] T024 [US2] 在 `backend/models.py` 新增或確認 `SendLog` 模型結構，並在發送完成後寫入紀錄
+ [X] T025 [US2] 在 `backend/tests/test_send_flow.py` 新增測試：模擬 SMTP 成功/失敗情境，驗證 API 回傳格式與 `SendLog` 內容
+ [X] T026 [US2] 在 `backend/api/releases.py` 的 send 路由中導入背景重試註記（非馬上實作背景重試，但記錄失敗以便後續 background retry 使用）
+ [X] T027 [US2] 在 `backend/templates/` 加入針對發送結果的簡潔日誌範本（視需求可選）
+ [X] T028 [US2] [P] 在 `specs/001-release-announcements/contracts/openapi.yaml` 中補強 `POST /releases/{id}/send` 的 request/response 範例（若需契約測試使用）
 
 ---
 

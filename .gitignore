@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+.venv/
+venv/
+/.venv
+build/
+dist/
+*.egg-info/
+*.egg
+
+# SQLite dev DB
+*.db
+dev.db
+
+# Environment files
+.env
+.env.*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Coverage
+htmlcov/
+.coverage
+
+# Temporary files
+*.tmp
+*.swp
+
+# Node (in case frontend present)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Docker
+Dockerfile*
+.dockerignore

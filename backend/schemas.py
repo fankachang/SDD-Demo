@@ -9,7 +9,7 @@ class LoginRequest(BaseModel):
 
 
 class Contact(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     name: str
     email: EmailStr
     group: Optional[str]
@@ -18,7 +18,7 @@ class Contact(BaseModel):
 
 
 class Program(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     name: str
     description: Optional[str]
 
