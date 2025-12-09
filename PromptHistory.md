@@ -733,4 +733,26 @@ Release v1.0.1 created for constitution metadata updates.
   2) 新增 backend/tests/conftest.py 與 backend/tests/test_send_simulation.py；
   3) 更新 tasks.md。然後跑測試並提交變更。
 
+進度摘要（簡短）：
+
+* 已開始並完成 US5 核心項目：
+  * mailer.py：捕捉 emailer 例外並建立 SendLog（記錄失敗原因）。
+  * 新增測試支援：conftest.py（smtp_stub fixture）。
+  * 新增失敗情境測試：test_send_simulation.py（模擬部分失敗、連線失敗），測試通過。
+  * 已更新 tasks.md（標記 T040/T041 完成，T042 仍留待 quickstart 補充）。
+* 測試：pytest 本地跑過，結果：8 passed。
+* 版本控制：已 commit 並推送到 001-release-announcements（commit: test(US5): ...）。
+
+下一步建議（選一）：
+
+  * 我現在把 quickstart 補上本機 SMTP 模擬教學（完成 T042）。
+  * 或：我為目前變更建立 Pull Request（PR）並填寫說明供審閱。
+要我接著做哪一項？
+```
+> 繼續
+
+```bash
+我要在 quickstart 加入本機 SMTP 模擬教學、更新 tasks.md 為已完成，然後 commit 並推送變更。
+
+
 ```

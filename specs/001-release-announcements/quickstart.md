@@ -136,3 +136,39 @@ curl -X GET "http://localhost:8000/send_logs?program_id=5&start=2025-01-01T00:00
 ```
 
 建議：將此 API 用於後台稽核頁面，並在 UI 提供導出或按條件篩選的功能以利調查失敗紀錄。
+
+## 本機模擬 SMTP（開發 / 測試）
+
+在本地測試時，建議使用模擬 SMTP 以避免將測試郵件送到外部收件者。以下為常見做法：
+
+- 使用 MailHog（推薦）：透過 Docker 快速啟動一個抓取郵件的介面。
+
+```bash
+# 使用 Docker 啟動 MailHog（在本機 http://localhost:8025 檢視郵件）
+docker run -p 1025:1025 -p 8025:8025 mailhog/mailhog
+
+# 將環境變數指向本機 MailHog
+export SMTP_HOST=localhost
+export SMTP_PORT=1025
+```
+
+- 使用 Mailpit（替代方案）：
+
+```bash
+docker run -p 1025:1025 -p 8025:8025 axllent/mailpit
+export SMTP_HOST=localhost
+export SMTP_PORT=1025
+```
+
+- 簡易 Python 模擬（不需 Docker）：使用標準庫的簡易 debug server（僅供開發使用）：
+
+```bash
+# 在一個終端執行
+python -m smtpd -n -c DebuggingServer localhost:1025
+
+# 在另一個終端設環境變數並啟動應用程式
+export SMTP_HOST=localhost
+export SMTP_PORT=1025
+```
+
+注意：上述方式僅供開發/測試環境，生產環境請使用正式 SMTP 提供者並妥善設定認證與 TLS。若使用模擬服務，記得在 CI 或測試腳本中指向模擬主機或使用相應的測試 fixture。

@@ -107,7 +107,7 @@ Independent Test: 在測試中模擬 SMTP 失敗，驗證 `SendLog` 包含 error
 - [ ] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
  - [X] T040 [P] [US5] 在 `backend/tests/conftest.py` 新增 SMTP 模擬 fixture（或使用第三方本機 smtp 模擬服務設定指引）
  - [X] T041 [US5] 在 `backend/tests/test_send_simulation.py` 實作模擬失敗測試（SMTP 連線失敗、逾時、單位收件失敗）
- - [ ] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
+ - [X] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
 - [ ] T043 [US5] [P] 新增 CI 測試腳本樣板 `/.github/workflows/ci.yml`（含 pytest 基本步驟，視專案需求決定是否立即啟用）
 
 - [ ] T048 [US5] E2E latency test — 建立簡單的端對端測試腳本測量從建立 Release 到發送完成的平均時間（範例資料與 repeat runs），以驗證 SC-001（平均 <= 3 分鐘）。
