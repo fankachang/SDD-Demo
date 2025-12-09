@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, ForeignKey, Index
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import enum
@@ -87,7 +87,12 @@ class SendResult(str, enum.Enum):
 class SendLog(Base):
     __tablename__ = "send_logs"
     id = Column(Integer, primary_key=True, index=True)
-    release_id = Column(Integer, ForeignKey("releases.id"))
+    release_id = Column(Integer, ForeignKey("releases.id"), index=True)
     sent_at = Column(DateTime, default=datetime.utcnow)
     result = Column(Enum(SendResult))
     detail = Column(Text)
+
+    __table_args__ = (
+        Index("ix_send_logs_sent_at", "sent_at"),
+        Index("ix_send_logs_release_id", "release_id"),
+    )

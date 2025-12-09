@@ -88,6 +88,11 @@ Independent Test: 使用 `GET /send_logs` 與過濾參數能回傳對應紀錄�
 - [ ] T037 [US4] 在 `backend/tests/test_send_logs.py` 實作查詢與過濾測試
 - [ ] T038 [US4] 在 `specs/001-release-announcements/quickstart.md` 加入查詢 send_logs 的示例
 - [ ] T039 [US4] 在 `backend/main.py` 註冊 `send_logs.py` 路由
+ - [X] T035 [P] [US4] 在 `backend/api/send_logs.py`（建立新檔）實作 `GET /send_logs`（支援時間篩選、program 篩選）
+ - [X] T036 [US4] 在 `backend/models.py` 確認 `SendLog` 模型並為 `SendLog` 加入索引以便查詢效率
+ - [X] T037 [US4] 在 `backend/tests/test_send_logs.py` 實作查詢與過濾測試
+ - [ ] T038 [US4] 在 `specs/001-release-announcements/quickstart.md` 加入查詢 send_logs 的示例
+ - [X] T039 [US4] 在 `backend/main.py` 註冊 `send_logs.py` 路由
 
 ---
 
