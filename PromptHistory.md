@@ -794,4 +794,14 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 
 接著我會更新待辦清單並 commit + push README 變更。
 
+完成：已把 README.md 加入連結並推到 001-release-announcements 分支。
+接下來要我開始執行 T045（安全審查與 backend/config.py）嗎？
+```
+> ok
+
+```bash
+我要讀取目前 main.py、emailer.py、mailer.py 以判斷最小修改範圍，接著新增 backend/config.py 並把 T045 標為進行中，最後執行測試。
+
+我要把 T045 標為進行中，然後新增 backend/config.py（包含環境讀取與日誌遮蔽過濾器），最後執行測試以確保未破壞現有功能。
+
 ```
