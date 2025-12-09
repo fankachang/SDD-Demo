@@ -154,6 +154,44 @@ paths:
                         - email: "bob@example.com"
                           status: success
         '400':
+          description: Bad Request (validation or parameter error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                too_many:
+                  summary: Too many recipients
+                  value:
+                    error: "validation_error"
+                    details:
+                      recipients: "too_many_recipients > 500"
+                      invalid_emails: ["bad-email@"]
+        '429':
+          description: Rate limit (SMTP provider)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limit:
+                  summary: SMTP provider rate limit
+                  value:
+                    error: "rate_limit"
+                    message: "SMTP provider rate limit, try again later"
+        '504':
+          description: Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: SMTP timeout
+                  value:
+                    error: "timeout"
+                    message: "SMTP request timed out (30s)"
+        '400':
           description: Bad Request (e.g., >500 recipients)
         '504':
           description: Timeout
@@ -305,3 +343,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RecipientResult'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object

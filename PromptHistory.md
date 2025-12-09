@@ -562,4 +562,25 @@ Release v1.0.1 created for constitution metadata updates.
     * 或者你希望我先把 quickstart.md 同步更新範例（T054）再開始實作。
   
   ```
+  > 請同步，不要先實作
+
+  ```bash
+  已同步完成（只做文件更新，未開始實作）：
+
+    * 已更新並推送：quickstart.md（新增錯誤回應範例、建議處理與 curl 範例），對應任務 T054。
+    * Commit: df79a48 docs: quickstart 加入錯誤回應範例與使用建議（對應 T054）
+    * 分支：origin/001-release-announcements
   
+  接下來你要我：
+
+    * 建立 PR 讓其他人審閱變更？ 或
+    * 繼續同步其他文件（例如 contracts 的 sample responses 或 spec 的精簡合併）？
+  ```
+  > 2
+  ```bash
+  我要把 openapi.yaml 同步加入錯誤回應 schema 與範例（400/504/429），然後 commit 並推送。
+
+  已新增 ErrorResponse schema 到 OpenAPI 合約（contracts/openapi.yaml）。需要我接著提交並推送變更到 Git 嗎？
+
+  ```
+  > ok
