@@ -497,15 +497,15 @@ Would you like me to suggest concrete remediation edits for the top 4 issues (U1
 > 先進行第二步
 
 ```bash
+我要在 openapi.yaml 補上 200 回應範例，讓 SendLogDetail 可作為契約範例被引用。這是最小變更且僅修改文件。
+
+已完成：openapi.yaml 的回應 schema 與範例已更新，200 回應現在包含 SendLog / SendLogDetail 的範例內容。
+
+下一步（選一）：
+
+  * 我可以幫你建立一個 commit（包含變更的檔案與說明）；或
+  * 我可以將這些變更匯出為一個 patch 檔案供你手動檢視/提交。
 
 ```
-已操作說明：我已於本分支提交一次 commit，將先前的規格修改與任務更新納入同一提交：
-
-- 檔案：`specs/001-release-announcements/spec.md`
-- 檔案：`specs/001-release-announcements/contracts/openapi.yaml`
-- 檔案：`specs/001-release-announcements/tasks.md`
-
-Git commit: a802f42
-Commit message: "docs: 補齊 SendLog.detail schema、明確 background-retry 範圍，並新增性能與授權測試任務（T048-T051）"
-
-（本段為自動化操作紀錄，已追加於 promptHistory.md）
+> 請幫我 commit 即可
+> 請幫我推送到遠端
