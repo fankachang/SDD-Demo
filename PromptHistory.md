@@ -842,3 +842,25 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 
 ```
 > 繼續，然後再完成時 Commit 
+
+```bash
+
+我要把 emailer.py 改為使用 backend.config.cfg 來集中讀取 SMTP 設定，然後執行測試並提交變更。
+
+已完成你交代的步驟：
+
+  * 把 emailer.py 改為使用 backend.config.cfg（集中環境變數來源），已 commit 並推到 001-release-announcements。
+  * 執行測試：10 passed, 42 warnings。
+  * 在待辦清單新增並完成 Centralize emailer config to use cfg（T045 子項）。
+
+下一步要我：
+
+  * 繼續 T045（例如加入 CI 工作流程自動跑測試與安全檢查），或
+  * 撰寫 PR 的安全審查變更摘要並更新 PR 描述？
+```
+> 先總結並 commit 
+
+```bash
+我要新增一份安全審查摘要檔案，更新待辦清單，然後 commit + push 到 001-release-announcements 分支。
+
+```
