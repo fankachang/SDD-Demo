@@ -1,6 +1,9 @@
 from typing import List, Dict, Any
 from sqlalchemy.orm import Session
 from .. import models, emailer
+from ..config import get_logger
+
+logger = get_logger(__name__)
 
 
 def send_release_synchronously(db: Session, release_id: int, recipients: List[Dict[str, Any]]):
@@ -19,6 +22,7 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
     rendered = emailer.render_template(subject, body_template, context)
 
     try:
+        logger.info("Sending release %s to %d recipients", release.id, len(recipients))
         results = emailer.send_synchronously(rendered["subject"], rendered["body"], recipients)
 
         overall_result = "success"
@@ -39,6 +43,7 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
     except Exception as e:
         # record failure in SendLog for auditing
         msg = str(e)
+        logger.exception("Exception while sending release %s: %s", release.id, msg)
         log = models.SendLog(release_id=release.id, result="failure", detail=msg)
         db.add(log)
         db.commit()

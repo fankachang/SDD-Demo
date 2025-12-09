@@ -804,4 +804,11 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 
 我要把 T045 標為進行中，然後新增 backend/config.py（包含環境讀取與日誌遮蔽過濾器），最後執行測試以確保未破壞現有功能。
 
+已開始 T045（標記為進行中）、新增並提交 config.py（包含環境讀取與日誌遮蔽過濾器），並執行測試：全部通過（8 passed）。
+要我接著把現有的日誌器接上 SecretFilter（例如在 main.py 或 mailer.py 使用 get_logger）或繼續執行下一個安全檢查清單項目？
+```
+> OK
+```bash
+我要把 SecretFilter 附加到 root logger，並在 mailer.py 使用 get_logger；接著 commit、push 並執行測試確認一切正常。
+
 ```

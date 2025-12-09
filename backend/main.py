@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 import os
 
 from . import db, models, schemas, emailer
+from .config import get_logger, cfg, redact_mapping
 from .api.releases import router as releases_router
 from .api import contacts as contacts_router
 from .api import programs as programs_router
@@ -16,6 +17,16 @@ app = FastAPI(title="Release Announcements MVP")
 def on_startup():
     # create DB tables if not present (MVP convenience)
     models.Base = db.Base  # ensure Base reference
+    # attach secret-redacting filter to root logger so logs don't leak secrets
+    get_logger("")
+
+    # log a redacted view of loaded config for debug (safe-printed)
+    try:
+        logger = get_logger(__name__)
+        logger.info("Loaded config: %s", redact_mapping(cfg.as_dict()))
+    except Exception:
+        pass
+
     db.Base.metadata.create_all(bind=db.engine)
 
 
