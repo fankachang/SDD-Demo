@@ -105,3 +105,34 @@ curl -X POST "http://localhost:8000/releases/1/send" \
 ```
 
 若回傳 400/504/429，請依上方建議在 UI 顯示相對處理步驟。
+
+## 查詢發送紀錄（Send Logs）範例
+
+系統支援透過 `GET /send_logs` 查詢發送紀錄，並可使用參數過濾：
+
+- `program_id`：依程式（Program）篩選
+- `start` / `end`：時間區間（ISO 8601 格式）
+- `result`：發送結果（`success`、`failure`、`timeout`）
+- `page` / `page_size`：分頁
+
+範例：查詢某程式在時間區間內的成功發送紀錄（第一頁，最多 10 筆）
+
+```bash
+curl -X GET "http://localhost:8000/send_logs?program_id=5&start=2025-01-01T00:00:00Z&end=2025-12-31T23:59:59Z&result=success&page=1&page_size=10"
+```
+
+回應範例（200）：
+
+```json
+[
+	{
+		"id": 123,
+		"release_id": 45,
+		"sent_at": "2025-06-01T12:34:56",
+		"result": "success",
+		"detail": "sent to 3 recipients"
+	}
+]
+```
+
+建議：將此 API 用於後台稽核頁面，並在 UI 提供導出或按條件篩選的功能以利調查失敗紀錄。

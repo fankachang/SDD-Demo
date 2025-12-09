@@ -669,5 +669,48 @@ Release v1.0.1 created for constitution metadata updates.
 
 接下來我會移除 main.py 中的舊 contacts/programs 直寫路由，改為註冊新的 router，並新增對應測試檔，之後執行測試。
 
+已完成 commit 與推送，並繼續實作 US3（contacts/programs）：
+
+動作已做：
+  * commit 並推送剛才的變更到遠端分支 001-release-announcements（兩次 commit，包含 US1/US2 與 US3 的變更）。
+  * 新增並註冊 contacts.py、programs.py。
+  * 移除 main.py 內舊的 contacts/programs 寫法，改以 router 註冊。
+  * 新增測試 test_contacts_programs.py。
+  * 執行測試：pytest 全部通過（5 passed）。
+
+下一步我會繼續實作 US4（send_logs 查詢與索引優化）或按你的指示調整優先順序。要我現在繼續 US4 嗎？ (yes/no)
+
+```
+> yes
+
+```bash
+我將先把 US4 的 TODO 加入待辦清單，然後修改模型加入索引、實作 send_logs API 與測試檔，最後跑一次測試。接下來會先更新 TODO。
+
+我要讀取 models.py 以找到適當位置新增索引。
+
+我要修改 models.py 加入索引，並新增 backend/api/send_logs.py 與測試檔 backend/tests/test_send_logs.py，同時在 main.py 註冊新 router。這會更新 4 個檔案。
+
+接著我會更新待辦項目狀態：把 API/模型/測試標記為已完成，測試執行標記為進行中。
+
+我將在專案虛擬環境中執行 pytest，確認新增測試通過。
+
+已完成 US4 的實作與驗證：
+
+  * 變更: 新增 send_logs.py、test_send_logs.py，並在 models.py 加入索引，更新任務檔。
+    * 檔案: send_logs.py 、 models.py 、 test_send_logs.py 、 tasks.md
+  * 測試: 本地執行 pytest，結果全部通過（6 passed）。
+  * 版本控制: 已 commit 並推送到分支 001-release-announcements（commit: feat(US4): 新增 send_logs 查詢 API、索引與測試）。
+
+下一步（請選一項）：
+
+  * 繼續：更新 quickstart 範例 quickstart.md（T038）。
+  * 或：我現在開始 US5（模擬 SMTP 與失敗情境的測試）。
+要我接著做哪一項？
+```
+> 繼續
+```bash
+我要在 quickstart 補上 send_logs 範例並提交檔案。
+
+我要把 send_logs 範例段落插入到 quickstart.md 的末尾，示範查詢與過濾用法。接著我會提交變更並推送。
 
 ```
