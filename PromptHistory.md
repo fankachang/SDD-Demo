@@ -540,4 +540,26 @@ Release v1.0.1 created for constitution metadata updates.
     C：直接套用最小變更 patch（我會先顯示要 commit 的變更摘要，然後 apply）？
     請選 A / B / C。
   ```
-  > 
+  > C
+
+  ```bash
+  我要套用最小變更：在 spec.md 明確同步發送行為與回應碼，補入性能基準說明；在 tasks.md 新增 T052–T054。完成後我會 commit 並推送。
+
+  已套用並提交最小變更，摘要：
+
+  已修改：
+
+    * spec.md — 新增 同步發送行為定義（MVP），並在 Edge Cases 補充明確回應碼與處理規則（validation->400、>500->400、timeout->504、rate limit->429/503 等）。
+    * tasks.md — 新增任務 T052、T053、T054（收件人數/驗證檢查、錯誤 mapping 與文件更新）。
+    * Git commit: 89957c1 docs: 明確同步發送行為與回應碼，補性能基準說明並新增任務 T052-T054
+
+  已推送到遠端分支 origin/001-release-announcements（最新 commit 710541b）。
+
+  下一步建議（你選一）：
+
+    * 我現在開始實作 Foundation（T006–T012）。
+    * 我先建立 PR（pull request）供你審閱變更。
+    * 或者你希望我先把 quickstart.md 同步更新範例（T054）再開始實作。
+  
+  ```
+  
