@@ -117,6 +117,10 @@ Independent Test: 在測試中模擬 SMTP 失敗，驗證 `SendLog` 包含 error
 - [ ] T050 授權強制與測試：新增測試以驗證管理者/發佈者角色邊界（範例：非管理者呼叫 `POST /programs` 應回 403），並在 API 規格中列出需受保護的路由清單。
 - [ ] T051 Endpoint auth enforcement — 在 `backend/api/*` 主要路由（contacts/programs/releases/send/send_logs）明確註記必須驗證角色與返回 401/403 規範，並將 Acceptance Criteria 補充「未授權操作應返回 401/403」。
 
+- [ ] T052 Implement recipient count & validation checks — 在 `POST /releases/{id}/send` 實作收件人數量檢查（>500 回 400）與前置 email 格式驗證（無效 email 回 400），並加入對應單元測試。
+- [ ] T053 Error mapping & logging — 定義 API 與 `SendLog` 中常見錯誤的 code-mapping（例如 timeout->504, rate_limit->429, validation->400），並在 `backend/tests/` 新增對應的契約測試。
+- [ ] T054 Update quickstart & docs — 在 `specs/001-release-announcements/quickstart.md` 加入使用者面對錯誤時的範例訊息與建議操作（如分批上傳、等待重試），並更新 quickstart 的 API 範例回應。
+
 ---
 
 ## 依賴關係（建議執行順序）

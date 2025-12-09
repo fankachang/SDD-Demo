@@ -123,6 +123,27 @@
 
 -- 系統將提供後端非同步重試（background retry）機制：對於發送失敗的紀錄，可排入後端重試佇列由背景工作處理；此機制不會改變同步 API 的單次嘗試限制，且重試次數/間隔等策略將在 implementation 階段定義。
 
+補充處理規則（回應碼與行為）：
+
+- 無效郵件或輸入驗證失敗：在 Step1/Step2 的驗證階段應以 `400 Bad Request` 拒絕，並回傳清楚的欄位錯誤資訊，避免進入發送流程。
+- 超過收件人上限（>500）：API 應回傳 `400 Bad Request` 並包含建議（例如：分批上傳或使用非同步批次處理），不應在同步模式下強行處理。
+- SMTP 連線失敗或目標伺服器拒絕：同步呼叫應回傳 `200`（表示 API 已完成處理）但在 `SendLog` 中記錄各收件人的失敗；若屬於整體 timeout，回傳 `504 Gateway Timeout`。
+- 郵件服務回傳速率/配額限制：建議回傳 `429 Too Many Requests` 或 `503 Service Unavailable`（視服務端回應而定），並在 `SendLog.detail` 記錄原始回應與建議重試策略。
+
+以上規則為 MVP 階段的建議實作細節，實作者可依照環境對具體 HTTP code 作小幅調整，但必須在 contracts/openapi.yaml 與測試中保持一致。
+
+## 同步發送行為定義（MVP）
+
+為避免文件在多處重複說明同步 SMTP 的細節，以下為 MVP 範圍內對「同步發送」行為的統一定義（Implementation 必須遵循）：
+
+- 單次 SMTP 嘗試：同步 API 在發送時對每位收件人僅執行一次 SMTP 嘗試，API 不做自動重試。
+- Timeout：同步發送的 API 等候 SMTP 回應的上限為 30 秒；若超過應回傳 `504 Gateway Timeout`，並在 `SendLog` 中記錄超時資訊與受影響收件人摘要。
+- 收件人上限：單次同步發送請求最多允許 500 位收件人；若超過，API 應以 `400 Bad Request` 回應並提示使用者分批或改用非同步處理。
+- 記錄細節：每次同步發送應在 `SendLog` 中記錄每位收件人的結果（success/failure）與錯誤摘要，建議使用 `SendLog.detail.recipient_results` 保存逐位狀態。
+- 錯誤回傳：對於可預先驗證的錯誤（例如無效 email 格式、參數錯誤），API 應以 `400` 回應；若遭遇郵件服務的頻率/配額限制，API 可回 `429 Too Many Requests` 或 `503 Service Unavailable`，實作時需在日誌記錄清楚原因。
+
+以上行為為 MVP 必須遵循的最小集合，任何背景重試或分批非同步策略皆視為後續迭代功能，需另行列入 tasks 並取得批准。
+
 ## Requirements *(mandatory)*
 
 <!--
