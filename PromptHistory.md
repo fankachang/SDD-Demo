@@ -754,5 +754,29 @@ Release v1.0.1 created for constitution metadata updates.
 ```bash
 我要在 quickstart 加入本機 SMTP 模擬教學、更新 tasks.md 為已完成，然後 commit 並推送變更。
 
+已完成：在 quickstart 加入本機 SMTP 模擬教學並標記 T042 完成，變更已 commit 並推送到分支 001-release-announcements。
+
+我已建立下一步待辦（Create PR、T044 文件更新、T045 安全檢查）。你要我現在建立 PR 還是開始 T044（文件更新）／T045（安全檢查）？
+
+```
+> 繼續
+
+```bash
+我將建立 GitHub Pull Request，並把 PR 描述填入變更摘要。下一步會更新待辦狀態。
+
+PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
+
+我已把待辦 Create pull request for 001-release-announcements 標記為完成。
+
+下一步要我開始 T044（更新文件）還是 T045（安全檢查）？
+
+```
+> 更新文件
+
+```bash
+我要讀取現有 README 與需求文件，然後更新 README 與 Docs/需求說明.md（加入 Quickstart、測試與 PR 連結），最後 commit 並 push。
+
+我要把 Quickstart 與測試指引加入 README.md，並在 需求說明.md 加上開發者快速啟動段落，接著 commit 並 push。
+
 
 ```
