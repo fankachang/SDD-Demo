@@ -7,6 +7,7 @@ from . import db, models, schemas, emailer
 from .api.releases import router as releases_router
 from .api import contacts as contacts_router
 from .api import programs as programs_router
+from .api import send_logs as send_logs_router
 
 app = FastAPI(title="Release Announcements MVP")
 
@@ -22,6 +23,7 @@ def on_startup():
 app.include_router(releases_router)
 app.include_router(contacts_router.router)
 app.include_router(programs_router.router)
+app.include_router(send_logs_router.router)
 
 
 def get_db():
@@ -41,7 +43,4 @@ def login(payload: schemas.LoginRequest):
 # contacts and programs routes are registered via routers in `backend/api/`
 
 
-@app.get("/send_logs", response_model=list[schemas.SendLogOut])
-def list_send_logs(db: Session = Depends(get_db)):
-    logs = db.query(models.SendLog).all()
-    return logs
+# send_logs endpoint is provided by backend/api/send_logs.py router

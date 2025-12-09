@@ -778,5 +778,20 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 
 我要把 Quickstart 與測試指引加入 README.md，並在 需求說明.md 加上開發者快速啟動段落，接著 commit 並 push。
 
+已完成文件更新（簡短）：
+
+  * 新增 DEVELOPER_QUICKSTART.md（包含建立 venv、安裝相依、啟動伺服器、執行測試與本機 SMTP 模擬範例）。已 commit 並推送到 001-release-announcements（commit: docs: add DEVELOPER_QUICKSTART (T044)）。
+  * 已在待辦中把 Update docs (T044) 標為完成。
+
+下一步要我：
+  * 開始 T045（安全審查與 backend/config.py 實作），或
+  * 在 README.md 中插入這份 Quickstart 的簡短連結（我可以代為編輯）？
+```
+> 2 然後先 commit 
+
+```bash
+我要把 README 加上一句連結到 DEVELOPER_QUICKSTART.md，然後 commit & push。
+
+接著我會更新待辦清單並 commit + push README 變更。
 
 ```
