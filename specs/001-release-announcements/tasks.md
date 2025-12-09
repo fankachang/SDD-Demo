@@ -102,6 +102,9 @@ Independent Test: 在測試中模擬 SMTP 失敗，驗證 `SendLog` 包含 error
 - [ ] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
 - [ ] T043 [US5] [P] 新增 CI 測試腳本樣板 `/.github/workflows/ci.yml`（含 pytest 基本步驟，視專案需求決定是否立即啟用）
 
+- [ ] T048 [US5] E2E latency test — 建立簡單的端對端測試腳本測量從建立 Release 到發送完成的平均時間（範例資料與 repeat runs），以驗證 SC-001（平均 <= 3 分鐘）。
+- [ ] T049 [US5] SendLog query perf test — 在測試資料庫建立至少 1000 筆 `SendLog` 範例資料，驗證 `GET /send_logs` 在典型過濾條件下回應時間 < 2s，並在超過時產生優化紀錄。
+
 ---
 
 ## Final Phase: Polish & Cross-Cutting Concerns
@@ -110,6 +113,9 @@ Independent Test: 在測試中模擬 SMTP 失敗，驗證 `SendLog` 包含 error
 - [ ] T045 安全性檢查：審查環境變數與日誌避免洩露敏感資訊（`backend/config.py`）
 - [ ] T046 [P] 補充單元測試與整合測試，將測試覆蓋率提升至團隊同意的門檻（例如 70%）
 - [ ] T047 代碼整理與 lint：在 `backend/` 執行格式化並修正警告（例如 use Black / ruff，視專案偏好）
+
+- [ ] T050 授權強制與測試：新增測試以驗證管理者/發佈者角色邊界（範例：非管理者呼叫 `POST /programs` 應回 403），並在 API 規格中列出需受保護的路由清單。
+- [ ] T051 Endpoint auth enforcement — 在 `backend/api/*` 主要路由（contacts/programs/releases/send/send_logs）明確註記必須驗證角色與返回 401/403 規範，並將 Acceptance Criteria 補充「未授權操作應返回 401/403」。
 
 ---
 

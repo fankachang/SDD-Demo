@@ -22,6 +22,8 @@
 
 - Q: 發送失敗時的重發/重試策略應採何種方式？ → A: 採伺服器端背景工作（排入佇列，由後端非同步處理），同步 API 仍維持單次 SMTP 嘗試並即時回傳結果。
 
+註：伺服器端背景重試（background retry）為未來擴充，非本次 MVP 必須實作。MVP 要求：同步 API 僅執行單次 SMTP 嘗試並回傳結果；對失敗的嘗試需產生可查詢的 `SendLog` 紀錄，以便未來背景工作或人工介入處理。若要在本次開發中實作背景重試，請將該工作列為後續迭代任務並取得專案核准。
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--
@@ -151,6 +153,18 @@
 - **Release（發佈草稿/紀錄）**：發佈內容，主要屬性：id、program_id、version、notes、created_by、status（draft/previewed/sent）、created_at/updated_at。
 - **ReleaseRecipient（發佈收件人快照）**：每次發佈的收件人快照，主要屬性：id、release_id、contact_id (nullable)、email、recipient_type（to/cc/bcc）。
 - **SendLog（發送日誌）**：發送結果記錄，主要屬性：id、release_id、sent_at、result（success/failure）、detail（錯誤或外部回應摘要）。
+
+  - **SendLog.detail 範例結構（JSON schema 簡述）**：為了讓前後端與測試擁有一致的解析格式，建議 detail 欄位採用下列結構（JSON object）：
+    {
+      "code": "string (optional, machine-readable error code)",
+      "message": "string (human-readable summary)",
+      "smtp_response": "string (原始 SMTP 回應或摘要, optional)",
+      "recipient_results": [
+        {"email":"string","status":"success|failure","code":"string?","message":"string?"}
+      ]
+    }
+  
+  實作時可在資料庫以 JSON/text 儲存該結構，並於 contracts/openapi.yaml 中定義 `SendLogDetail` schema 以作為 API response 的共同契約。
 
 ## Success Criteria (必備)
 

@@ -133,6 +133,26 @@ paths:
       responses:
         '200':
           description: Send result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendLog'
+              examples:
+                success:
+                  summary: Example success send log
+                  value:
+                    id: 123
+                    release_id: 1
+                    sent_at: "2025-12-09T12:00:00Z"
+                    result: success
+                    detail:
+                      code: "OK"
+                      message: "All recipients processed"
+                      recipient_results:
+                        - email: "alice@example.com"
+                          status: success
+                        - email: "bob@example.com"
+                          status: success
         '400':
           description: Bad Request (e.g., >500 recipients)
         '504':
@@ -143,6 +163,34 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SendLog'
+              examples:
+                sample:
+                  summary: Example list of send logs
+                  value:
+                    - id: 123
+                      release_id: 1
+                      sent_at: "2025-12-09T12:00:00Z"
+                      result: success
+                      detail:
+                        code: "OK"
+                        message: "All recipients processed"
+                        recipient_results:
+                          - email: "alice@example.com"
+                            status: success
+                    - id: 124
+                      release_id: 2
+                      sent_at: "2025-12-09T13:00:00Z"
+                      result: failure
+                      detail:
+                        code: "SMTP_ERR"
+                        message: "SMTP connection refused"
+                        smtp_response: "Connection refused"
 components:
   schemas:
     LoginRequest:
@@ -226,4 +274,34 @@ components:
           type: string
           enum: [success, failure, timeout]
         detail:
+          $ref: '#/components/schemas/SendLogDetail'
+
+    RecipientResult:
+      type: object
+      properties:
+        email:
           type: string
+        status:
+          type: string
+          enum: [success, failure]
+        code:
+          type: string
+        message:
+          type: string
+
+    SendLogDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "optional machine-readable error code"
+        message:
+          type: string
+          description: "human-readable summary"
+        smtp_response:
+          type: string
+          description: "original SMTP response or summary"
+        recipient_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipientResult'
