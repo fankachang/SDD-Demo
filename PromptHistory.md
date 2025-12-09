@@ -713,4 +713,24 @@ Release v1.0.1 created for constitution metadata updates.
 
 我要把 send_logs 範例段落插入到 quickstart.md 的末尾，示範查詢與過濾用法。接著我會提交變更並推送。
 
+進度更新（簡短）：
+
+  * 已完成：在 quickstart.md 新增 GET /send_logs 範例與回應示例（對應 T038），並在 tasks.md 標記已完成。已 commit 並 push 到分支 001-release-announcements。
+
+下一步建議（選一）：
+
+  * 我現在開始 US5：為開發/測試新增 SMTP 模擬 fixture 與失敗情境測試（T040–T042）。
+  * 或：建立 PR 供你合併/審閱目前變更。
+你要我做哪一項？
+```
+> 繼續
+
+```bash
+我要讀取 mailer.py 以確認 send 路由的錯誤處理與映射，然後根據行為撰寫測試。
+
+我要：
+  1) 修改 mailer.py 以在發生例外時記錄 SendLog；
+  2) 新增 backend/tests/conftest.py 與 backend/tests/test_send_simulation.py；
+  3) 更新 tasks.md。然後跑測試並提交變更。
+
 ```

@@ -18,20 +18,29 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
     context = {"notes": release.notes or ""}
     rendered = emailer.render_template(subject, body_template, context)
 
-    results = emailer.send_synchronously(rendered["subject"], rendered["body"], recipients)
+    try:
+        results = emailer.send_synchronously(rendered["subject"], rendered["body"], recipients)
 
-    overall_result = "success"
-    details = []
-    for r in results:
-        details.append(f"{r['email']}:{r['result']}")
-        if r["result"] != "success":
-            overall_result = "failure"
+        overall_result = "success"
+        details = []
+        for r in results:
+            details.append(f"{r['email']}:{r['result']}")
+            if r["result"] != "success":
+                overall_result = "failure"
 
-    log = models.SendLog(release_id=release.id, result=overall_result, detail=";".join(details))
-    db.add(log)
-    if overall_result == "success":
-        release.status = models.ReleaseStatus.sent
-    db.commit()
-    db.refresh(log)
+        log = models.SendLog(release_id=release.id, result=overall_result, detail=";".join(details))
+        db.add(log)
+        if overall_result == "success":
+            release.status = models.ReleaseStatus.sent
+        db.commit()
+        db.refresh(log)
 
-    return {"send_log_id": log.id, "results": results}
+        return {"send_log_id": log.id, "results": results}
+    except Exception as e:
+        # record failure in SendLog for auditing
+        msg = str(e)
+        log = models.SendLog(release_id=release.id, result="failure", detail=msg)
+        db.add(log)
+        db.commit()
+        db.refresh(log)
+        return {"send_log_id": log.id, "results": [{"email": "<internal>", "result": "failure", "detail": msg}]}
