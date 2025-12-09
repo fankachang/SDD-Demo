@@ -427,85 +427,117 @@ Release v1.0.1 created for constitution metadata updates.
 
 ### 分析任務
 
-```bash
-/speckit.analyze 
-```
+* 第一次
 
-```bash
+  ```bash
+  /speckit.analyze 
+  ```
 
-我要先執行專案先決檢查腳本，找出 FEATURE_DIR 與可用文件位置。
+  ```bash
 
-我將同時讀取 spec.md、plan.md、tasks.md 與專案憲法檔以擷取必要段落。
+  我要先執行專案先決檢查腳本，找出 FEATURE_DIR 與可用文件位置。
 
-我要建立一個簡短的 TODO 列表來追蹤分析步驟與進度。
+  我將同時讀取 spec.md、plan.md、tasks.md 與專案憲法檔以擷取必要段落。
 
-Next Actions
+  我要建立一個簡短的 TODO 列表來追蹤分析步驟與進度。
 
-  * 若要開始實作（/speckit.implement）：請先修正下列 HIGH 問題
-    * 定義 SendLog.detail schema（U1）
-    * 明確 background retry 範疇（是否為 MVP）（A1）
-    * 新增性能測試任務以驗證 SC-001 / SC-003（G1）
-    * 新增授權 Enforcement 測試（G2）
-  * 若以上項目未修正，將增加開發不確定性或導致測試/契約失配。
-  * 建議指令（手動）：執行 /speckit.specify 以補齊 SendLog schema 與 edge-case 策略；執行 /speckit.tasks 以新增性能與授權測試任務。
+  Next Actions
 
-Would you like me to suggest concrete remediation edits for the top 4 issues (U1, A1, G1, G2)?
+    * 若要開始實作（/speckit.implement）：請先修正下列 HIGH 問題
+      * 定義 SendLog.detail schema（U1）
+      * 明確 background retry 範疇（是否為 MVP）（A1）
+      * 新增性能測試任務以驗證 SC-001 / SC-003（G1）
+      * 新增授權 Enforcement 測試（G2）
+    * 若以上項目未修正，將增加開發不確定性或導致測試/契約失配。
+    * 建議指令（手動）：執行 /speckit.specify 以補齊 SendLog schema 與 edge-case 策略；執行 /speckit.tasks 以新增性能與授權測試任務。
 
-```
-> 依據你認為最佳且最小修改幅度的方式進行
+  Would you like me to suggest concrete remediation edits for the top 4 issues (U1, A1, G1, G2)?
 
-```bash
-預期最小檔案修改位置（只修改文件）
+  ```
+  > 依據你認為最佳且最小修改幅度的方式進行
 
-  * spec.md — 插入 SendLog.detail schema 範例、背景重試範疇說明、在 Acceptance Criteria 補一句授權相關回應碼要求。
-  * openapi.yaml — 新增 SendLogDetail schema（YAML）。
-  * tasks.md — 新增 T048~T051 任務項目與 minimal 描述。
-  * （選擇性）quickstart.md — 新增如何執行 perf tests / auth tests 的簡短範例命令（非必要、建議）。
+  ```bash
+  預期最小檔案修改位置（只修改文件）
 
-下一步（需要你的明確核准）
+    * spec.md — 插入 SendLog.detail schema 範例、背景重試範疇說明、在 Acceptance Criteria 補一句授權相關回應碼要求。
+    * openapi.yaml — 新增 SendLogDetail schema（YAML）。
+    * tasks.md — 新增 T048~T051 任務項目與 minimal 描述。
+    * （選擇性）quickstart.md — 新增如何執行 perf tests / auth tests 的簡短範例命令（非必要、建議）。
 
-  * 我可以為你產生上述文件變更的「建議 patch」（apply_patch 格式），包含要在每個檔案新增或替換的精確文字段落。
-  * 請回覆：「請產生 patch」或「請先只顯示我要插入的完整文字（不產生 patch）」。
+  下一步（需要你的明確核准）
 
-```
+    * 我可以為你產生上述文件變更的「建議 patch」（apply_patch 格式），包含要在每個檔案新增或替換的精確文字段落。
+    * 請回覆：「請產生 patch」或「請先只顯示我要插入的完整文字（不產生 patch）」。
 
-> 請直接修改
+  ```
 
-```bash
-我要先讀取要修改的三個文件內容以產生精準 patch（spec.md、openapi.yaml、tasks.md）。
+  > 請直接修改
 
-接下來我會直接套用三個檔案的最小修改 patch：更新 spec.md、openapi.yaml、tasks.md。這將插入 SendLog.detail schema 範例、明確 background-retry 範疇，並新增 4 個任務條目。
+  ```bash
+  我要先讀取要修改的三個文件內容以產生精準 patch（spec.md、openapi.yaml、tasks.md）。
 
-我將把內部待辦標記為完成，反映已套用修正。
+  接下來我會直接套用三個檔案的最小修改 patch：更新 spec.md、openapi.yaml、tasks.md。這將插入 SendLog.detail schema 範例、明確 background-retry 範疇，並新增 4 個任務條目。
 
-已完成修改：
+  我將把內部待辦標記為完成，反映已套用修正。
 
-  * 在 spec.md 新增：
-    * SendLog.detail 範例 JSON schema；
-    * 明確註記 background retry 為非 MVP（需迭代批准）。
-  * 在 openapi.yaml 新增：
-    * RecipientResult 與 SendLogDetail schema，並將 SendLog.detail 改為參考 SendLogDetail。
-  * 在 tasks.md 新增任務：
-    * T048 E2E latency test、T049 SendLog query perf test、T050 授權強制與測試、T051 Endpoint auth enforcement。
+  已完成修改：
 
-下一步建議（選一）：
+    * 在 spec.md 新增：
+      * SendLog.detail 範例 JSON schema；
+      * 明確註記 background retry 為非 MVP（需迭代批准）。
+    * 在 openapi.yaml 新增：
+      * RecipientResult 與 SendLogDetail schema，並將 SendLog.detail 改為參考 SendLogDetail。
+    * 在 tasks.md 新增任務：
+      * T048 E2E latency test、T049 SendLog query perf test、T050 授權強制與測試、T051 Endpoint auth enforcement。
 
-  * 我可以幫你產生一個簡短的 commit（含 commit message），要我代為提交嗎？
-  * 或者你要我繼續將 OpenAPI 文件中的 SendLog response example 同步更新為使用 SendLogDetail（以利契約測試）？
+  下一步建議（選一）：
 
-```
-> 先進行第二步
+    * 我可以幫你產生一個簡短的 commit（含 commit message），要我代為提交嗎？
+    * 或者你要我繼續將 OpenAPI 文件中的 SendLog response example 同步更新為使用 SendLogDetail（以利契約測試）？
 
-```bash
-我要在 openapi.yaml 補上 200 回應範例，讓 SendLogDetail 可作為契約範例被引用。這是最小變更且僅修改文件。
+  ```
+  > 先進行第二步
 
-已完成：openapi.yaml 的回應 schema 與範例已更新，200 回應現在包含 SendLog / SendLogDetail 的範例內容。
+  ```bash
+  我要在 openapi.yaml 補上 200 回應範例，讓 SendLogDetail 可作為契約範例被引用。這是最小變更且僅修改文件。
 
-下一步（選一）：
+  已完成：openapi.yaml 的回應 schema 與範例已更新，200 回應現在包含 SendLog / SendLogDetail 的範例內容。
 
-  * 我可以幫你建立一個 commit（包含變更的檔案與說明）；或
-  * 我可以將這些變更匯出為一個 patch 檔案供你手動檢視/提交。
+  下一步（選一）：
 
-```
-> 請幫我 commit 即可
-> 請幫我推送到遠端
+    * 我可以幫你建立一個 commit（包含變更的檔案與說明）；或
+    * 我可以將這些變更匯出為一個 patch 檔案供你手動檢視/提交。
+
+  ```
+  > 請幫我 commit 即可
+  > 請幫我推送到遠端
+
+* 第二次
+
+  ```bash
+  /speckit.analyze
+  ```
+  
+  ```bash
+  我要先重新執行專案先決檢查腳本，確認 FEATURE_DIR 與可用文件位置。
+  
+  Next Actions (建議，按優先順序)
+
+    * 高優先（建議在開始大量實作前完成）
+      1. 合併並精簡同步 SMTP 的多處說明（修 D1）。
+      2. 在 spec/plan 補入性能測試基準數值（修 A1），並把 T048/T049 明確化為可執行測試腳本。
+      3. 補齊 edge-case 的拒絕與分批策略（修 U1），並在 tasks.md 新增對應實作/文件任務（若需）。
+    * 中優先
+      4. 在 tasks.md 為所有 [P] 標註加上前提條件（修 I1）。
+      5. 在 spec 開頭增術語表統一命名（修 I2）。
+   
+    * 若要我直接修改（最小變更）：我可以產生 patch（spec.md + plan.md 或 tasks.md 的小幅更改）來執行第 1–3 項；需你回覆「請產生 patch」。
+  
+  是否要我：
+
+    A：現在執行 /speckit.analyze（再跑一次完整檢查）？
+    B：依上述 Next Actions 自動產生並顯示「最小變更」patch（不套用）？
+    C：直接套用最小變更 patch（我會先顯示要 commit 的變更摘要，然後 apply）？
+    請選 A / B / C。
+  ```
+  > 
