@@ -68,8 +68,8 @@ Goal: 管理者能新增/編輯/刪除收件人與程式清單，變更即時反
 
 Independent Test: 呼叫 Contacts / Programs 的 CRUD API，檢查在發佈建立時可選到更新後資料。
 
-- [ ] T029 [P] [US3] 在 `backend/api/contacts.py`（建立新檔）實作 `GET /contacts`, `POST /contacts`, `PUT /contacts/{id}`, `DELETE /contacts/{id}`
-- [ ] T030 [P] [US3] 在 `backend/api/programs.py`（建立新檔）實作 `GET /programs`, `POST /programs`, `PUT /programs/{id}`, `DELETE /programs/{id}`
+- [X] T029 [P] [US3] 在 `backend/api/contacts.py`（建立新檔）實作 `GET /contacts`, `POST /contacts`, `PUT /contacts/{id}`, `DELETE /contacts/{id}`
+- [X] T030 [P] [US3] 在 `backend/api/programs.py`（建立新檔）實作 `GET /programs`, `POST /programs`, `PUT /programs/{id}`, `DELETE /programs/{id}`
 - [ ] T031 [US3] 在 `backend/tests/test_contacts_programs.py` 新增 CRUD 測試，驗證新增後在 `GET /programs` 可見、在建立 release 時可選擇
 - [ ] T032 [US3] 在 `backend/schemas.py` 補實作 `ContactSchema` 與 `ProgramSchema` 驗證規則（email 格式驗證）
 - [ ] T033 [US3] 在 `backend/main.py` 註冊 `contacts.py` 與 `programs.py` 路由

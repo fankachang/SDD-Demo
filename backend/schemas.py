@@ -12,7 +12,7 @@ class Contact(BaseModel):
     id: Optional[int] = None
     name: str
     email: EmailStr
-    group: Optional[str]
+    group: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -20,7 +20,7 @@ class Contact(BaseModel):
 class Program(BaseModel):
     id: Optional[int] = None
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 

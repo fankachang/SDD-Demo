@@ -667,5 +667,7 @@ Release v1.0.1 created for constitution metadata updates.
 ```bash
 我要先把變更 commit 並推到遠端；接著開始實作 US3（contacts/programs）並新增路由與測試。
 
+接下來我會移除 main.py 中的舊 contacts/programs 直寫路由，改為註冊新的 router，並新增對應測試檔，之後執行測試。
+
 
 ```
