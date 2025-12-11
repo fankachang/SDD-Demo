@@ -1,133 +1,42 @@
-# SDD Flow Test Project
+# SDD-Demo
 
-* Init specify
+本專案為 Spec‑Driven Development（SDD）示範範例，示範使用 `specify` 工具與 AI Agent workflow 來建立需求、檢查清單與發佈流程。
 
-```bash
-> specify init .
+主要目的
 
-                        ███████╗██████╗ ███████╗ ██████╗██╗███████╗██╗   ██╗                        
-                        ██╔════╝██╔══██╗██╔════╝██╔════╝██║██╔════╝╚██╗ ██╔╝                        
-                        ███████╗██████╔╝█████╗  ██║     ██║█████╗   ╚████╔╝                         
-                        ╚════██║██╔═══╝ ██╔══╝  ██║     ██║██╔══╝    ╚██╔╝                          
-                        ███████║██║     ███████╗╚██████╗██║██║        ██║                           
-                        ╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝        ╚═╝                           
-                                                                                                    
-                         GitHub Spec Kit - Spec-Driven Development Toolkit                          
+快速開始
 
-Warning: Current directory is not empty (3 items)
-Template files will be merged with existing content and may overwrite existing files
-Do you want to continue? [y/N]: y
-╭──────────────────────────────────────────────────────────────────────────────────────────────────╮
-│                                                                                                  │
-│  Specify Project Setup                                                                           │
-│                                                                                                  │
-│  Project         SDD-Demo                                                                        │
-│  Working Path    /Users/fanka/AIProject/SDD-Demo                                                 │
-│                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+## 開發者快速指引
 
-╭─────────────────────────────────── Choose your AI assistant: ────────────────────────────────────╮
-│                                                                                                  │
-│  ▶      copilot (GitHub Copilot)                                                                 │
-│         claude (Claude Code)                                                                     │
-│         gemini (Gemini CLI)                                                                      │
-│         cursor (Cursor)                                                                          │
+簡短開啟說明請參閱：`Docs/DEVELOPER_QUICKSTART.md`（包含如何建立虛擬環境、安裝相依、啟動伺服器與執行測試）。
 
-Selected AI assistant: copilot
-Selected script type: sh
-Initialize Specify Project
-├── ● Check required tools (ok)
-Initialize Specify Project
-├── ● Check required tools (ok)
-├── ● Select AI assistant (copilot)
-├── ● Select script type (sh)
-├── ● Fetch latest release (release v0.0.90 (59,640 bytes))
-├── ● Download template (spec-kit-template-copilot-sh-v0.0.90.zip)
-├── ● Extract template
-├── ● Archive contents (39 entries)
-├── ● Extraction summary (temp 3 items)
-├── ● Ensure scripts executable (5 updated)
-├── ● Cleanup
-├── ● Initialize git repository (existing repo detected)
-└── ● Finalize (project ready)
+## 模型選擇
 
-Project ready.
+* GPT‑4.1 / GPT‑4o / GPT‑5 mini 使用筆記
 
-Release v1.0.1 created for constitution metadata updates.
+### 一句話總結
 
-╭───────────────────────────────────── Agent Folder Security ──────────────────────────────────────╮
-│                                                                                                  │
-│  Some agents may store credentials, auth tokens, or other identifying and private artifacts in   │
-│  the agent folder within your project.                                                           │
-│  Consider adding .github/ (or parts of it) to .gitignore to prevent accidental credential        │
-│  leakage.                                                                                        │
-│                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+平常 Speckit 規格＋寫程式建議預設用 **GPT‑4.1（0x）**，需要看圖時改用 **GPT‑4o**，遇到特別複雜或超大專案再短暫切到 **GPT‑5 mini**。
 
-╭─────────────────────────────────────────── Next Steps ───────────────────────────────────────────╮
-│                                                                                                  │
-│  1. You're already in the project directory!                                                     │
-│  2. Start using slash commands with your AI agent:                                               │
-│     2.1 /constitution - Establish project principles                                             │
-│     2.2 /specify - Create baseline specification                                                 │
-│     2.3 /plan - Create implementation plan                                                       │
-│     2.4 /tasks - Generate actionable tasks                                                       │
-│     2.5 /implement - Execute implementation                                                      │
-│                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+### 模型比較總覽
 
-╭────────────────────────────────────── Enhancement Commands ──────────────────────────────────────╮
-│                                                                                                  │
-│  Optional commands that you can use for your specs (improve quality & confidence)                │
-│                                                                                                  │
-│  ○ /clarify (optional) - Ask structured questions to de-risk ambiguous areas before planning     │
-│  (run before /plan if used)                                                                      │
-│  ○ /analyze (optional) - Cross-artifact consistency & alignment report (after /tasks, before     │
-│  /implement)                                                                                     │
-│                                                                                                  │
-╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
-> 
-```
+| 模型        | 建議優先度 | 特性重點 | 典型用途 |
+|------------|------------|----------|----------|
+| GPT‑4.1    | ★★★★☆（首選） | 推理與程式能力佳、速度夠快、成本合理，官方與多方測試都把它當通用預設工作馬。| 日常 Speckit 規格撰寫、一般系統設計、程式生成與重構、高頻互動。 |
+| GPT‑4o     | ★★★☆☆        | 多模態能力強，支援影像輸入；文字與程式推理略遜於 4.1，但延遲低、體驗順。| 需要讀圖（流程圖、UI 截圖）、簡報截圖轉規格或程式的情境。 |
+| GPT‑5 mini | ★★★★☆（進階用） | GPT‑5 家族的精簡版，比 4.1/4o 更聰明、上下文更大，但延遲與成本較高。 | 超長規格文件、跨多模組架構設計、困難 bug root cause 分析、大型專案一次性檢視。 |
 
-* 修改 AGENTS.md
+### 為何 GPT‑4.1 適合作為預設
 
-```bash
-* Except for the constitution, which MUST be in English, all specifications, agreements, and user-oriented documents MUST be written in Traditional Chinese (zh-TW).
-* When drafting the constitution, the context MUST be translated into "constitution_zhTW.md" and placed in the same directory (please note that file names are case-sensitive).
-* Git Log, Code annotations MUST be written in Traditional Chinese (zh-TW)
-```
+- GPT‑4.1 在程式理解、長上下文推理與回應品質上，普遍被評為優於 GPT‑4o，同時維持相近甚至更好的成本效益與延遲表現。
+- 文件與 Copilot 指南也將 GPT‑4.1 視為通用預設模型，特別適合高頻、需要即時回饋的開發與寫作工作流程。
 
-* 新增憲法文件
+### 什麼時候改用 GPT‑4o
 
-* 追加規則
+- 任務需要處理圖片（如系統架構圖、UI 截圖、筆記照相）並轉成文字描述或程式碼時，GPT‑4o 的多模態能力更合適。 
+- 對於只是一般文字規格與程式開發，4.1 在推理與程式相關基準測試上通常略勝 4o，若沒有影像需求就不需要特別切換。
 
-  ```bash
-  /speckit.constitution  不要過度開發也不要過度設計
-  ```
-* 建立需求 
+### 什麼時候考慮 GPT‑5 mini
 
-  ```bash
-  請幫我寫一個需求的 prompt:
-  建立一個程式版本發佈網站，主要功能為當程式發佈時需要發信給特定使用者的公告信件
-
-  流程：
-  一、步驟1：輸入以下項目：
-
-  發佈程式名稱
-  發佈程式版本
-  使用者配合事項
-  二、步驟2：檢視要發佈的內容
-  三、將檢視的內容發送給特定使用者
-
-  四、需要後檯管理介面，需具備功能：
-
-  收件人信箱管理（具體要發給哪些使用者，需要可設定 CC or BCC）
-  需要可以設定 發佈程式列表
-  ```
-
-* 將結果轉到暫存檔
-
-```
-好的，請幫我套用並生成說明文件到 Docs/需求說明.md 檔案
-```
-
+- GPT‑5 系列在複雜推理、困難程式挑戰、多模態理解等基準上，整體表現優於 4.1 與 4o，mini 版本提供較佳的成本與速度折衷。 
+- 適合處理一次要讀很多檔的大型 SDD/ADR、複雜架構評估、或長期追查難以重現的錯誤；但因成本與延遲較高，不建議當作每天高頻 Speckit 指令與一般 coding 的預設模型。

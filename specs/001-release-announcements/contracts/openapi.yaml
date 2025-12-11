@@ -1,0 +1,355 @@
+openapi: 3.0.3
+info:
+  title: Release Announcements API
+  version: '0.1.0'
+  description: API for MVP release announcement flow (create -> preview -> send)
+servers:
+  - url: http://localhost:8000
+paths:
+  /auth/login:
+    post:
+      summary: Login (email/password)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: OK
+  /contacts:
+    get:
+      summary: List contacts
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: Created
+  /contacts/{id}:
+    put:
+      summary: Update contact
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete contact
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '204':
+          description: Deleted
+  /programs:
+    get:
+      summary: List programs
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create program
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Program'
+      responses:
+        '201':
+          description: Created
+  /releases:
+    post:
+      summary: Create release (draft)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleaseCreate'
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: List releases
+      responses:
+        '200':
+          description: OK
+  /releases/{id}/preview:
+    get:
+      summary: Preview rendered email for release
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Preview content
+  /releases/{id}/send:
+    post:
+      summary: Send release synchronously (SMTP)
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recipients:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RecipientInput'
+      responses:
+        '200':
+          description: Send result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendLog'
+              examples:
+                success:
+                  summary: Example success send log
+                  value:
+                    id: 123
+                    release_id: 1
+                    sent_at: "2025-12-09T12:00:00Z"
+                    result: success
+                    detail:
+                      code: "OK"
+                      message: "All recipients processed"
+                      recipient_results:
+                        - email: "alice@example.com"
+                          status: success
+                        - email: "bob@example.com"
+                          status: success
+        '400':
+          description: Bad Request (validation or parameter error)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                too_many:
+                  summary: Too many recipients
+                  value:
+                    error: "validation_error"
+                    details:
+                      recipients: "too_many_recipients > 500"
+                      invalid_emails: ["bad-email@"]
+        '429':
+          description: Rate limit (SMTP provider)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limit:
+                  summary: SMTP provider rate limit
+                  value:
+                    error: "rate_limit"
+                    message: "SMTP provider rate limit, try again later"
+        '504':
+          description: Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                timeout:
+                  summary: SMTP timeout
+                  value:
+                    error: "timeout"
+                    message: "SMTP request timed out (30s)"
+        '400':
+          description: Bad Request (e.g., >500 recipients)
+        '504':
+          description: Timeout
+  /send_logs:
+    get:
+      summary: List send logs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SendLog'
+              examples:
+                sample:
+                  summary: Example list of send logs
+                  value:
+                    - id: 123
+                      release_id: 1
+                      sent_at: "2025-12-09T12:00:00Z"
+                      result: success
+                      detail:
+                        code: "OK"
+                        message: "All recipients processed"
+                        recipient_results:
+                          - email: "alice@example.com"
+                            status: success
+                    - id: 124
+                      release_id: 2
+                      sent_at: "2025-12-09T13:00:00Z"
+                      result: failure
+                      detail:
+                        code: "SMTP_ERR"
+                        message: "SMTP connection refused"
+                        smtp_response: "Connection refused"
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required: [email, password]
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        group:
+          type: string
+      required: [name, email]
+    Program:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+      required: [name]
+    ReleaseCreate:
+      type: object
+      properties:
+        program_id:
+          type: integer
+        version:
+          type: string
+        notes:
+          type: string
+        recipients:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipientInput'
+      required: [program_id, version, recipients]
+    RecipientInput:
+      type: object
+      properties:
+        email:
+          type: string
+        type:
+          type: string
+          enum: [to, cc, bcc]
+      required: [email, type]
+    Release:
+      type: object
+      properties:
+        id:
+          type: integer
+        program_id:
+          type: integer
+        version:
+          type: string
+        notes:
+          type: string
+        status:
+          type: string
+          enum: [draft, previewed, sent]
+    SendLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        release_id:
+          type: integer
+        sent_at:
+          type: string
+          format: date-time
+        result:
+          type: string
+          enum: [success, failure, timeout]
+        detail:
+          $ref: '#/components/schemas/SendLogDetail'
+
+    RecipientResult:
+      type: object
+      properties:
+        email:
+          type: string
+        status:
+          type: string
+          enum: [success, failure]
+        code:
+          type: string
+        message:
+          type: string
+
+    SendLogDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: "optional machine-readable error code"
+        message:
+          type: string
+          description: "human-readable summary"
+        smtp_response:
+          type: string
+          description: "original SMTP response or summary"
+        recipient_results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipientResult'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
