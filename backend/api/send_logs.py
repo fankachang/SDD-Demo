@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 from datetime import datetime
 
-from .. import db, models, schemas
+from .. import db, models, schemas, auth
 
 router = APIRouter()
 
@@ -17,7 +17,17 @@ def list_send_logs(
     page: int = Query(1, ge=1),
     page_size: int = Query(50, ge=1, le=500),
     db: Session = Depends(db.get_db),
+    current_user: models.User = Depends(auth.get_current_user)
 ):
+    """
+    查詢發送紀錄（需登入）
+    
+    支援過濾：
+    - program_id: 依程式篩選
+    - start/end: 時間區間
+    - result: 發送結果 (success/failure/timeout)
+    - page/page_size: 分頁
+    """
     q = db.query(models.SendLog)
 
     if program_id is not None:

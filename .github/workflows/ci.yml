@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+    - name: 檢出程式碼
+      uses: actions/checkout@v4
+    
+    - name: 設定 Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: 快取 pip 套件
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: 安裝相依套件
+      run: |
+        cd backend
+        pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-cov  # 測試覆蓋率工具
+    
+    - name: 執行 pytest 測試
+      run: |
+        cd backend
+        pytest -v --tb=short
+      env:
+        # 測試環境變數
+        DATABASE_URL: sqlite:///./test.db
+        SMTP_HOST: localhost
+        SMTP_PORT: 1025
+        SMTP_USER: test@example.com
+        SMTP_PASS: testpass
+        SECRET_KEY: test-secret-key-for-ci
+    
+    - name: 執行測試覆蓋率（可選）
+      if: matrix.python-version == '3.12'
+      run: |
+        cd backend
+        pytest --cov=. --cov-report=xml --cov-report=term
+      env:
+        DATABASE_URL: sqlite:///./test.db
+        SMTP_HOST: localhost
+        SMTP_PORT: 1025
+        SECRET_KEY: test-secret-key-for-ci
+    
+    - name: 上傳覆蓋率報告（可選）
+      if: matrix.python-version == '3.12'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage.xml
+        fail_ci_if_error: false

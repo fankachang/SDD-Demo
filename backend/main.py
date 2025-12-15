@@ -1,9 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
+from datetime import timedelta
 import os
 
-from . import db, models, schemas, emailer
+from . import db, models, schemas, emailer, auth
 from .config import get_logger, cfg, redact_mapping
 from .api.releases import router as releases_router
 from .api import contacts as contacts_router
@@ -46,9 +47,39 @@ def get_db():
 
 
 @app.post("/auth/login")
-def login(payload: schemas.LoginRequest):
-    # Minimal stub: in MVP we trust authenticated environment or add later
-    return {"message": "login not implemented in MVP; use dev stub"}
+def login(payload: schemas.LoginRequest, db: Session = Depends(db.get_db)):
+    """使用者登入端點 - 驗證憑證並返回 access token"""
+    logger = get_logger(__name__)
+    
+    # 驗證使用者
+    user = auth.authenticate_user(db, payload.email, payload.password)
+    if not user:
+        logger.warning(f"登入失敗: {payload.email}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="帳號或密碼錯誤",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # 建立 access token
+    access_token = auth.create_session(
+        user_id=user.id,
+        user_email=user.email,
+        user_role=user.role
+    )
+    
+    logger.info(f"使用者登入成功: {user.email} (role: {user.role})")
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "email": user.email,
+            "name": user.name,
+            "role": user.role
+        }
+    }
 
 
 # contacts and programs routes are registered via routers in `backend/api/`

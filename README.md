@@ -2,13 +2,115 @@
 
 本專案為 Spec‑Driven Development（SDD）示範範例，示範使用 `specify` 工具與 AI Agent workflow 來建立需求、檢查清單與發佈流程。
 
-主要目的
+## 主要功能
 
-快速開始
+本專案實作了一個程式版本發佈通知系統（Release Announcements），包含以下功能：
 
-## 開發者快速指引
+- 建立發佈草稿與預覽郵件內容
+- 選擇收件人並執行同步郵件發送
+- 管理收件人與程式清單
+- 檢視發送紀錄與稽核
+- 開發環境 SMTP 模擬與測試
 
-簡短開啟說明請參閱：`Docs/DEVELOPER_QUICKSTART.md`（包含如何建立虛擬環境、安裝相依、啟動伺服器與執行測試）。
+## 快速開始
+
+### 1. 建立並啟用虛擬環境
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate  # macOS/Linux
+# .venv\Scripts\activate  # Windows
+```
+
+### 2. 安裝相依套件
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### 3. 設定環境變數
+
+複製 `.env.example` 為 `.env` 並設定必要變數：
+
+```bash
+cp backend/.env.example backend/.env
+# 編輯 .env 檔案設定 SMTP 與資料庫連線
+```
+
+### 4. 初始化資料庫
+
+```bash
+cd backend
+# 如果使用 Alembic
+alembic upgrade head
+
+# 或直接啟動應用程式會自動建立資料表
+```
+
+### 5. 啟動開發伺服器
+
+```bash
+cd backend
+uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+訪問 http://localhost:8000/docs 查看 API 文件。
+
+### 6. 執行測試
+
+```bash
+cd backend
+pytest -v
+```
+
+## 詳細文件
+
+- **開發者快速指引**: [Docs/DEVELOPER_QUICKSTART.md](Docs/DEVELOPER_QUICKSTART.md)
+- **功能規格**: [specs/001-release-announcements/spec.md](specs/001-release-announcements/spec.md)
+- **實作計畫**: [specs/001-release-announcements/plan.md](specs/001-release-announcements/plan.md)
+- **資料模型**: [specs/001-release-announcements/data-model.md](specs/001-release-announcements/data-model.md)
+- **API 使用範例**: [specs/001-release-announcements/quickstart.md](specs/001-release-announcements/quickstart.md)
+- **任務清單**: [specs/001-release-announcements/tasks.md](specs/001-release-announcements/tasks.md)
+
+## 專案結構
+
+```
+SDD-Demo/
+├── backend/              # 後端 API 服務
+│   ├── api/             # API 路由
+│   ├── models.py        # 資料模型
+│   ├── schemas.py       # Pydantic Schemas
+│   ├── auth.py          # 授權中介層
+│   ├── emailer.py       # 郵件發送
+│   ├── config.py        # 設定管理
+│   └── tests/           # 測試
+├── specs/               # 功能規格文件
+│   └── 001-release-announcements/
+├── Docs/                # 專案文件
+└── .github/workflows/   # CI/CD 設定
+```
+
+## 技術堆疊
+
+- **語言**: Python 3.11+
+- **框架**: FastAPI
+- **資料庫**: SQLite (MVP) / PostgreSQL (生產)
+- **ORM**: SQLAlchemy
+- **測試**: pytest
+- **郵件**: SMTP (標準庫)
+
+## 貢獻
+
+本專案遵循 Spec-Driven Development 流程：
+
+1. 先建立完整的功能規格 (`spec.md`)
+2. 通過規格檢查表驗證 (`checklists/`)
+3. 制定實作計畫 (`plan.md`)
+4. 分解任務清單 (`tasks.md`)
+5. 按階段執行實作
+
+詳情請參閱 [AGENTS.md](AGENTS.md)。
 
 ## 模型選擇
 

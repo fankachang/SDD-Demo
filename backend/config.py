@@ -14,8 +14,16 @@ class Config:
         self.SMTP_PORT = int(os.getenv("SMTP_PORT", "0") or 0)
         self.SMTP_USER = os.getenv("SMTP_USER")
         self.SMTP_PASS = os.getenv("SMTP_PASS")
+        self.SMTP_FROM = os.getenv("SMTP_FROM", "noreply@example.com")
+        self.SMTP_USE_TLS = os.getenv("SMTP_USE_TLS", "true").lower() == "true"
         self.SMTP_TIMEOUT = int(os.getenv("SMTP_TIMEOUT", "30"))
         self.DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dev.db")
+        self.SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
+        self.SESSION_EXPIRE_MINUTES = int(os.getenv("SESSION_EXPIRE_MINUTES", "60"))
+        self.APP_NAME = os.getenv("APP_NAME", "Release Announcements")
+        self.APP_ENV = os.getenv("APP_ENV", "development")
+        self.DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+        self.LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
     def as_dict(self) -> Dict[str, str]:
         return {
@@ -23,8 +31,16 @@ class Config:
             "SMTP_PORT": str(self.SMTP_PORT),
             "SMTP_USER": self.SMTP_USER,
             "SMTP_PASS": self.SMTP_PASS,
+            "SMTP_FROM": self.SMTP_FROM,
+            "SMTP_USE_TLS": str(self.SMTP_USE_TLS),
             "SMTP_TIMEOUT": str(self.SMTP_TIMEOUT),
             "DATABASE_URL": self.DATABASE_URL,
+            "SECRET_KEY": self.SECRET_KEY,
+            "SESSION_EXPIRE_MINUTES": str(self.SESSION_EXPIRE_MINUTES),
+            "APP_NAME": self.APP_NAME,
+            "APP_ENV": self.APP_ENV,
+            "DEBUG": str(self.DEBUG),
+            "LOG_LEVEL": self.LOG_LEVEL,
         }
 
 
@@ -37,7 +53,7 @@ def _mask_value(v: str) -> str:
     return "****" + v[-4:]
 
 
-SENSITIVE_KEYS = {"SMTP_PASS", "SMTP_USER", "DATABASE_URL"}
+SENSITIVE_KEYS = {"SMTP_PASS", "SMTP_USER", "DATABASE_URL", "SECRET_KEY"}
 
 
 def redact_mapping(m: Dict[str, str], sensitive_keys: Iterable[str] = SENSITIVE_KEYS) -> Dict[str, str]:
@@ -74,15 +90,18 @@ class SecretFilter(logging.Filter):
 
     def filter(self, record: logging.LogRecord) -> bool:  # return True to allow record
         try:
-            if isinstance(record.msg, str):
-                record.msg = self._redact(record.msg)
-            if record.args:
-                if isinstance(record.args, (list, tuple)):
-                    record.args = tuple(self._redact(str(a)) for a in record.args)
-                elif isinstance(record.args, dict):
-                    record.args = {k: self._redact(str(v)) for k, v in record.args.items()}
-                else:
-                    record.args = self._redact(str(record.args))
+            # Safest approach: compute the formatted message, redact it, and replace
+            # the record's msg with the already-formatted, redacted string so
+            # handlers/formatters won't re-insert secrets.
+            try:
+                formatted = record.getMessage()
+            except Exception:
+                formatted = str(record.msg)
+
+            redacted = self._redact(formatted)
+            # replace msg with redacted, and clear args to avoid re-formatting
+            record.msg = redacted
+            record.args = ()
         except Exception:
             # never raise from a logging filter
             pass
@@ -97,5 +116,7 @@ def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     # attach filter once
     if not any(isinstance(f, SecretFilter) for f in logger.filters):
-        logger.addFilter(SecretFilter(cfg))
+        # build a fresh Config snapshot so tests that set env vars at runtime
+        # get the current secret values for redaction
+        logger.addFilter(SecretFilter(Config()))
     return logger

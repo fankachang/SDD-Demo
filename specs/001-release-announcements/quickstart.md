@@ -94,7 +94,208 @@ pytest
 
 	建議前端行為：提示使用者稍後再試，或提供分批發送的建議與說明。
 
+## 管理收件人與程式清單
+
+### 收件人（Contacts）管理
+
+#### 列出所有收件人
+
+```bash
+curl -X GET "http://localhost:8000/contacts" \
+	-H "Authorization: Bearer $TOKEN"
+```
+
+#### 新增收件人
+
+```bash
+curl -X POST "http://localhost:8000/contacts" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"name": "張三",
+		"email": "zhang.san@example.com",
+		"group": "技術團隊"
+	}'
+```
+
+回應範例（201 Created）：
+
+```json
+{
+	"id": 1,
+	"name": "張三",
+	"email": "zhang.san@example.com",
+	"group": "技術團隊"
+}
+```
+
+#### 更新收件人
+
+```bash
+curl -X PUT "http://localhost:8000/contacts/1" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"name": "張三（資深）",
+		"email": "zhang.san@example.com",
+		"group": "技術團隊"
+	}'
+```
+
+#### 刪除收件人
+
+```bash
+curl -X DELETE "http://localhost:8000/contacts/1" \
+	-H "Authorization: Bearer $TOKEN"
+```
+
+### 程式（Programs）管理
+
+#### 列出所有程式
+
+```bash
+curl -X GET "http://localhost:8000/programs" \
+	-H "Authorization: Bearer $TOKEN"
+```
+
+#### 新增程式
+
+```bash
+curl -X POST "http://localhost:8000/programs" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"name": "產品管理系統",
+		"description": "公司內部產品管理平台"
+	}'
+```
+
+回應範例（201 Created）：
+
+```json
+{
+	"id": 1,
+	"name": "產品管理系統",
+	"description": "公司內部產品管理平台"
+}
+```
+
+#### 更新程式
+
+```bash
+curl -X PUT "http://localhost:8000/programs/1" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"name": "產品管理系統 v2",
+		"description": "公司內部產品管理平台（第二代）"
+	}'
+```
+
+#### 刪除程式
+
+```bash
+curl -X DELETE "http://localhost:8000/programs/1" \
+	-H "Authorization: Bearer $TOKEN"
+```
+
+---
+
 ## 範例 curl：發送 release（含 error handling 範例）
+
+### 1. 登入取得 access token
+
+```bash
+curl -X POST "http://localhost:8000/auth/login" \
+	-H "Content-Type: application/json" \
+	-d '{"email":"admin@example.com","password":"your-password"}'
+```
+
+回應範例：
+
+```json
+{
+	"access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+	"token_type": "bearer",
+	"user": {
+		"id": 1,
+		"email": "admin@example.com",
+		"name": "管理員",
+		"role": "admin"
+	}
+}
+```
+
+### 2. 建立 Release（草稿）
+
+```bash
+export TOKEN="your-access-token-here"
+
+curl -X POST "http://localhost:8000/releases" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"program_id": 1,
+		"version": "v2.0.0",
+		"notes": "主要更新：新增使用者管理功能，修復已知問題",
+		"recipients": [
+			{"email":"alice@example.com","type":"to"},
+			{"email":"bob@example.com","type":"cc"}
+		]
+	}'
+```
+
+回應範例（201 Created）：
+
+```json
+{
+	"id": 1,
+	"program_id": 1,
+	"version": "v2.0.0",
+	"notes": "主要更新：新增使用者管理功能，修復已知問題",
+	"status": "draft"
+}
+```
+
+### 3. 預覽 Release 郵件內容
+
+```bash
+curl -X GET "http://localhost:8000/releases/1/preview" \
+	-H "Authorization: Bearer $TOKEN"
+```
+
+回應範例（200 OK）：
+
+```json
+{
+	"release_id": 1,
+	"program_name": "產品管理系統",
+	"version": "v2.0.0",
+	"notes": "主要更新：新增使用者管理功能，修復已知問題",
+	"subject": "[產品管理系統] v2.0.0 版本發佈通知",
+	"body_html": "<html><body><h1>版本發佈通知</h1>...</body></html>",
+	"body_text": "版本發佈通知\n程式：產品管理系統\n版本：v2.0.0\n...",
+	"recipient_count": 2,
+	"recipients": [
+		{"id": 1, "email": "alice@example.com", "recipient_type": "to"},
+		{"id": 2, "email": "bob@example.com", "recipient_type": "cc"}
+	]
+}
+```
+
+### 4. 發送 Release
+
+```bash
+curl -X POST "http://localhost:8000/releases/1/send" \
+	-H "Content-Type: application/json" \
+	-H "Authorization: Bearer $TOKEN" \
+	-d '{
+		"recipients": [
+			{"email":"alice@example.com","type":"to"},
+			{"email":"bob@example.com","type":"bcc"}
+		]
+	}'
+```
 
 範例（成功或部分失敗時，API 回傳 `SendLog`）：
 

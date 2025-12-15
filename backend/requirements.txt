@@ -7,3 +7,5 @@ jinja2
 email-validator
 python-dotenv
 pytest
+passlib[bcrypt]
+pyjwt
