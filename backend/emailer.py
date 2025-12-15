@@ -28,7 +28,9 @@ def send_synchronously(subject: str, body: str, recipients: List[Dict]) -> List[
     # If no SMTP host configured, simulate success (useful for dev)
     if not host:
         for r in recipients:
-            results.append({"email": r["email"], "result": "success", "detail": "simulated"})
+            results.append(
+                {"email": r["email"], "result": "success", "detail": "simulated"}
+            )
         return results
 
     try:
@@ -48,12 +50,22 @@ def send_synchronously(subject: str, body: str, recipients: List[Dict]) -> List[
                 msg.set_content(body)
                 try:
                     smtp.send_message(msg)
-                    results.append({"email": r["email"], "result": "success", "detail": "sent"})
+                    results.append(
+                        {"email": r["email"], "result": "success", "detail": "sent"}
+                    )
                 except (smtplib.SMTPException, socket.error) as e:
-                    results.append({"email": r["email"], "result": "failure", "detail": str(e)})
+                    results.append(
+                        {"email": r["email"], "result": "failure", "detail": str(e)}
+                    )
     except (smtplib.SMTPException, socket.error) as e:
         # Entire session failed (treat as timeout/failure for all)
         for r in recipients:
-            results.append({"email": r["email"], "result": "failure", "detail": f"session error: {e}"})
+            results.append(
+                {
+                    "email": r["email"],
+                    "result": "failure",
+                    "detail": f"session error: {e}",
+                }
+            )
 
     return results

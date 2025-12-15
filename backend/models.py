@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, ForeignKey, Index
 from sqlalchemy.orm import relationship
-from datetime import datetime
+from datetime import datetime, timezone
 import enum
 from .db import Base
 
@@ -17,8 +17,8 @@ class User(Base):
     name = Column(String, nullable=False)
     role = Column(Enum(RoleEnum), nullable=False)
     password_hash = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class Program(Base):
@@ -26,8 +26,8 @@ class Program(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(Text)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class Contact(Base):
@@ -37,8 +37,8 @@ class Contact(Base):
     email = Column(String, nullable=False, index=True)
     group = Column(String, nullable=True)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 
 class ReleaseStatus(str, enum.Enum):
@@ -55,8 +55,8 @@ class Release(Base):
     notes = Column(Text)
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     status = Column(Enum(ReleaseStatus), default=ReleaseStatus.draft)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     recipients = relationship("ReleaseRecipient", back_populates="release")
 
@@ -87,8 +87,8 @@ class SendResult(str, enum.Enum):
 class SendLog(Base):
     __tablename__ = "send_logs"
     id = Column(Integer, primary_key=True, index=True)
-    release_id = Column(Integer, ForeignKey("releases.id"), index=True)
-    sent_at = Column(DateTime, default=datetime.utcnow)
+    release_id = Column(Integer, ForeignKey("releases.id"))
+    sent_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     result = Column(Enum(SendResult))
     detail = Column(Text)
 

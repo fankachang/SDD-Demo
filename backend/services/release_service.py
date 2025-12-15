@@ -4,13 +4,19 @@ from .. import models
 
 
 def create_release(db: Session, payload: Dict[str, Any]):
-    release = models.Release(program_id=payload["program_id"], version=payload["version"], notes=payload.get("notes"))
+    release = models.Release(
+        program_id=payload["program_id"],
+        version=payload["version"],
+        notes=payload.get("notes"),
+    )
     db.add(release)
     db.commit()
     db.refresh(release)
 
     for r in payload.get("recipients", []):
-        rr = models.ReleaseRecipient(release_id=release.id, email=r["email"], recipient_type=r.get("type", "to"))
+        rr = models.ReleaseRecipient(
+            release_id=release.id, email=r["email"], recipient_type=r.get("type", "to")
+        )
         db.add(rr)
     db.commit()
     return release

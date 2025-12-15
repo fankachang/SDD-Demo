@@ -10,11 +10,11 @@
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict
 from enum import Enum
 
-from fastapi import Depends, HTTPException, status, Header
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 import jwt
@@ -40,6 +40,7 @@ security = HTTPBearer()
 
 class UserRole(str, Enum):
     """使用者角色定義"""
+
     ADMIN = "admin"
     PUBLISHER = "publisher"
 
@@ -58,10 +59,12 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     """建立 JWT access token"""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -75,7 +78,7 @@ def decode_access_token(token: str) -> Optional[Dict]:
     except jwt.ExpiredSignatureError:
         logger.warning("Token 已過期")
         return None
-    except jwt.JWTError as e:
+    except jwt.InvalidTokenError as e:
         logger.warning(f"JWT 驗證失敗: {e}")
         return None
 
@@ -92,27 +95,36 @@ def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> User:
     """取得當前登入使用者（依賴注入）"""
     token = credentials.credentials
     payload = decode_access_token(token)
-    
+
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="無效或過期的憑證",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
-    user_id: int = payload.get("sub")
-    if user_id is None:
+
+    user_id_str: str = payload.get("sub")
+    if user_id_str is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="無效的憑證格式",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
+    try:
+        user_id = int(user_id_str)
+    except (ValueError, TypeError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="無效的使用者 ID",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
         raise HTTPException(
@@ -120,30 +132,26 @@ async def get_current_user(
             detail="使用者不存在",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     return user
 
 
 async def get_current_active_publisher(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ) -> User:
     """確保當前使用者至少是 publisher 角色"""
     if current_user.role not in [UserRole.PUBLISHER, UserRole.ADMIN]:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="需要 publisher 或更高權限"
+            status_code=status.HTTP_403_FORBIDDEN, detail="需要 publisher 或更高權限"
         )
     return current_user
 
 
-async def get_current_admin(
-    current_user: User = Depends(get_current_user)
-) -> User:
+async def get_current_admin(current_user: User = Depends(get_current_user)) -> User:
     """確保當前使用者是 admin 角色"""
     if current_user.role != UserRole.ADMIN:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="需要 admin 權限"
+            status_code=status.HTTP_403_FORBIDDEN, detail="需要 admin 權限"
         )
     return current_user
 
@@ -156,20 +164,20 @@ _session_store: Dict[str, Dict] = {}
 def create_session(user_id: int, user_email: str, user_role: str) -> str:
     """建立 session 並返回 token"""
     token_data = {
-        "sub": user_id,
+        "sub": str(user_id),  # sub 必須是字串
         "email": user_email,
-        "role": user_role
+        "role": user_role,
     }
     access_token = create_access_token(token_data)
-    
+
     # 儲存到 in-memory store（可選）
     _session_store[access_token] = {
         "user_id": user_id,
         "email": user_email,
         "role": user_role,
-        "created_at": datetime.utcnow().isoformat()
+        "created_at": datetime.now(timezone.utc).isoformat(),
     }
-    
+
     return access_token
 
 

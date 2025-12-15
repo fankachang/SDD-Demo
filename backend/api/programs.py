@@ -10,7 +10,7 @@ router = APIRouter()
 @router.get("/programs", response_model=List[schemas.Program])
 def list_programs(
     db: Session = Depends(db.get_db),
-    current_user: models.User = Depends(auth.get_current_user)
+    current_user: models.User = Depends(auth.get_current_user),
 ):
     """列出所有程式（需登入）"""
     return db.query(models.Program).all()
@@ -20,7 +20,7 @@ def list_programs(
 def create_program(
     payload: schemas.Program,
     db: Session = Depends(db.get_db),
-    current_user: models.User = Depends(auth.get_current_admin)
+    current_user: models.User = Depends(auth.get_current_admin),
 ):
     """建立程式（需 admin 權限）"""
     p = models.Program(name=payload.name, description=payload.description)
@@ -35,7 +35,7 @@ def update_program(
     id: int,
     payload: schemas.Program,
     db: Session = Depends(db.get_db),
-    current_user: models.User = Depends(auth.get_current_admin)
+    current_user: models.User = Depends(auth.get_current_admin),
 ):
     """更新程式（需 admin 權限）"""
     p = db.query(models.Program).filter(models.Program.id == id).first()
@@ -52,7 +52,7 @@ def update_program(
 def delete_program(
     id: int,
     db: Session = Depends(db.get_db),
-    current_user: models.User = Depends(auth.get_current_admin)
+    current_user: models.User = Depends(auth.get_current_admin),
 ):
     """刪除程式（需 admin 權限）"""
     p = db.query(models.Program).filter(models.Program.id == id).first()

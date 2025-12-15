@@ -56,7 +56,9 @@ def _mask_value(v: str) -> str:
 SENSITIVE_KEYS = {"SMTP_PASS", "SMTP_USER", "DATABASE_URL", "SECRET_KEY"}
 
 
-def redact_mapping(m: Dict[str, str], sensitive_keys: Iterable[str] = SENSITIVE_KEYS) -> Dict[str, str]:
+def redact_mapping(
+    m: Dict[str, str], sensitive_keys: Iterable[str] = SENSITIVE_KEYS
+) -> Dict[str, str]:
     out = {}
     for k, v in (m or {}).items():
         if k in sensitive_keys and v:

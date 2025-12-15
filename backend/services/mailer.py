@@ -6,7 +6,9 @@ from ..config import get_logger
 logger = get_logger(__name__)
 
 
-def send_release_synchronously(db: Session, release_id: int, recipients: List[Dict[str, Any]]):
+def send_release_synchronously(
+    db: Session, release_id: int, recipients: List[Dict[str, Any]]
+):
     """Send a release synchronously using backend.emailer and record a SendLog.
 
     Returns: dict with keys: send_log_id, results
@@ -23,7 +25,9 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
 
     try:
         logger.info("Sending release %s to %d recipients", release.id, len(recipients))
-        results = emailer.send_synchronously(rendered["subject"], rendered["body"], recipients)
+        results = emailer.send_synchronously(
+            rendered["subject"], rendered["body"], recipients
+        )
 
         overall_result = "success"
         details = []
@@ -32,7 +36,9 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
             if r["result"] != "success":
                 overall_result = "failure"
 
-        log = models.SendLog(release_id=release.id, result=overall_result, detail=";".join(details))
+        log = models.SendLog(
+            release_id=release.id, result=overall_result, detail=";".join(details)
+        )
         db.add(log)
         if overall_result == "success":
             release.status = models.ReleaseStatus.sent
@@ -48,4 +54,7 @@ def send_release_synchronously(db: Session, release_id: int, recipients: List[Di
         db.add(log)
         db.commit()
         db.refresh(log)
-        return {"send_log_id": log.id, "results": [{"email": "<internal>", "result": "failure", "detail": msg}]}
+        return {
+            "send_log_id": log.id,
+            "results": [{"email": "<internal>", "result": "failure", "detail": msg}],
+        }

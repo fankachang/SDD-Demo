@@ -863,4 +863,27 @@ PR 已建立： https://github.com/fankachang/SDD-Demo/pull/3
 ```bash
 我要新增一份安全審查摘要檔案，更新待辦清單，然後 commit + push 到 001-release-announcements 分支。
 
+已完成：
+
+  * 新增並 commit security_review_summary.md（T045 安全審查摘要），已推到 001-release-announcements。
+  * 更新待辦清單（新增並完成「Add security review summary (T045)」）。
+
+下一步要我把這段安全摘要加入 PR 描述（替你更新 https://github.com/fankachang/SDD-Demo/pull/3 的說明），
+或直接開始把 T045 的 CI 驗證工作（添加 GitHub Actions workflow）列入實作？
+
+```
+
+## 改用 Claude Sonnet 4.5
+
+```bash
+keep going
+好的,我已經完成所有上下文的載入和分析。讓我建立任務清單並開始執行實作:
+
+現在讓我開始執行未完成的任務。首先檢查專案設置驗證(ignore 檔案):
+
+很好,.gitignore 已經存在並涵蓋了Python專案所需的基本模式。現在讓我開始執行任務。首先標記第一個任務為進行中:
+
+現在執行 T003 - 建立 .env.example 檔案:
+
+
 ```

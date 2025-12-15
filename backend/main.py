@@ -1,10 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
-from datetime import timedelta
-import os
 
-from . import db, models, schemas, emailer, auth
+from . import db, models, schemas, auth
 from .config import get_logger, cfg, redact_mapping
 from .api.releases import router as releases_router
 from .api import contacts as contacts_router
@@ -50,7 +47,7 @@ def get_db():
 def login(payload: schemas.LoginRequest, db: Session = Depends(db.get_db)):
     """使用者登入端點 - 驗證憑證並返回 access token"""
     logger = get_logger(__name__)
-    
+
     # 驗證使用者
     user = auth.authenticate_user(db, payload.email, payload.password)
     if not user:
@@ -60,16 +57,14 @@ def login(payload: schemas.LoginRequest, db: Session = Depends(db.get_db)):
             detail="帳號或密碼錯誤",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     # 建立 access token
     access_token = auth.create_session(
-        user_id=user.id,
-        user_email=user.email,
-        user_role=user.role
+        user_id=user.id, user_email=user.email, user_role=user.role
     )
-    
+
     logger.info(f"使用者登入成功: {user.email} (role: {user.role})")
-    
+
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -77,8 +72,8 @@ def login(payload: schemas.LoginRequest, db: Session = Depends(db.get_db)):
             "id": user.id,
             "email": user.email,
             "name": user.name,
-            "role": user.role
-        }
+            "role": user.role,
+        },
     }
 
 
