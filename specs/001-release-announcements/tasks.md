@@ -19,7 +19,7 @@ Feature 資料夾：`/specs/001-release-announcements`
 ## Phase 2: Foundational（基礎建置 — 必須完成以解鎖各使用者故事）
 
 - [X] T006 設計並在 `backend/models.py` 中建立核心資料模型：`User`, `Program`, `Contact`, `Release`, `ReleaseRecipient`, `SendLog`（依據 `specs/001-release-announcements/data-model.md`）
-- [X] T007 建立 `backend/db.py` 的資料庫初始化與 session 管理函式，並在 `backend/alembic/` 初始化 migration（若採 Alembic，提供 migration 設定檔路徑）
+- [X] T007 建立 `backend/db.py` 的資料庫初始化與 session 管理函式（MVP 使用 FastAPI 自動建立資料表，未實作 Alembic migration）
 - [X] T008 [P] 在 `backend/schemas.py` 實作 Pydantic schema（或 Pydantic v2 的 ConfigDict）對應於 models：`UserSchema`, `ProgramSchema`, `ContactSchema`, `ReleaseCreateSchema`, `RecipientInputSchema`, `SendLogSchema`
 - [X] T009 實作簡易授權中介層 `backend/auth.py`（email/password 登入與 session 管理的 skeleton），並在 `backend/main.py` 註冊中介層
 - [X] T010 在 `backend/emailer.py` 實作同步 SMTP 抽象（`send_email(to_list, cc, bcc, subject, body, timeout=30)`），並支援透過環境變數切換到本機模擬 SMTP
@@ -57,7 +57,7 @@ Independent Test: 呼叫 `POST /releases/{id}/send` 並提供 recipients，API �
  [X] T024 [US2] 在 `backend/models.py` 新增或確認 `SendLog` 模型結構，並在發送完成後寫入紀錄
  [X] T025 [US2] 在 `backend/tests/test_send_flow.py` 新增測試：模擬 SMTP 成功/失敗情境，驗證 API 回傳格式與 `SendLog` 內容
  [X] T026 [US2] 在 `backend/api/releases.py` 的 send 路由中導入背景重試註記（非馬上實作背景重試，但記錄失敗以便後續 background retry 使用）
- [X] T027 [US2] 在 `backend/templates/` 加入針對發送結果的簡潔日誌範本（視需求可選）
+ [X] T027 [US2] 在 `backend/templates/` 加入針對發送結果的簡潔日誌範本（可選，目前使用 SendLog 模型記錄）
  [X] T028 [US2] [P] 在 `specs/001-release-announcements/contracts/openapi.yaml` 中補強 `POST /releases/{id}/send` 的 request/response 範例（若需契約測試使用）
 
 ---
@@ -83,16 +83,11 @@ Goal: 系統管理者可查詢每次發送紀錄並查看錯誤摘要以利稽�
 
 Independent Test: 使用 `GET /send_logs` 與過濾參數能回傳對應紀錄，失敗紀錄包含 detail 欄位。
 
-- [ ] T035 [P] [US4] 在 `backend/api/send_logs.py`（建立新檔）實作 `GET /send_logs`（支援時間篩選、program 篩選）
-- [ ] T036 [US4] 在 `backend/models.py` 確認 `SendLog` 模型並為 `SendLog` 加入索引以便查詢效率
-- [ ] T037 [US4] 在 `backend/tests/test_send_logs.py` 實作查詢與過濾測試
-- [ ] T038 [US4] 在 `specs/001-release-announcements/quickstart.md` 加入查詢 send_logs 的示例
-- [ ] T039 [US4] 在 `backend/main.py` 註冊 `send_logs.py` 路由
- - [X] T035 [P] [US4] 在 `backend/api/send_logs.py`（建立新檔）實作 `GET /send_logs`（支援時間篩選、program 篩選）
- - [X] T036 [US4] 在 `backend/models.py` 確認 `SendLog` 模型並為 `SendLog` 加入索引以便查詢效率
- - [X] T037 [US4] 在 `backend/tests/test_send_logs.py` 實作查詢與過濾測試
- - [X] T038 [US4] 在 `specs/001-release-announcements/quickstart.md` 加入查詢 send_logs 的示例
- - [X] T039 [US4] 在 `backend/main.py` 註冊 `send_logs.py` 路由
+- [X] T035 [P] [US4] 在 `backend/api/send_logs.py`（建立新檔）實作 `GET /send_logs`（支援時間篩選、program 篩選）
+- [X] T036 [US4] 在 `backend/models.py` 確認 `SendLog` 模型並為 `SendLog` 加入索引以便查詢效率
+- [X] T037 [US4] 在 `backend/tests/test_send_logs.py` 實作查詢與過濾測試
+- [X] T038 [US4] 在 `specs/001-release-announcements/quickstart.md` 加入查詢 send_logs 的示例
+- [X] T039 [US4] 在 `backend/main.py` 註冊 `send_logs.py` 路由
 
 ---
 
@@ -102,14 +97,10 @@ Goal: 在開發/測試環境模擬 SMTP 與失敗情境，確保 send_logs 能�
 
 Independent Test: 在測試中模擬 SMTP 失敗，驗證 `SendLog` 包含 error detail 且 API 回傳預期狀態碼。
 
-- [ ] T040 [P] [US5] 在 `backend/tests/conftest.py` 新增 SMTP 模擬 fixture（或使用第三方本機 smtp 模擬服務設定指引）
-- [ ] T041 [US5] 在 `backend/tests/test_send_simulation.py` 實作模擬失敗測試（SMTP 連線失敗、逾時、單位收件失敗）
-- [ ] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
- - [X] T040 [P] [US5] 在 `backend/tests/conftest.py` 新增 SMTP 模擬 fixture（或使用第三方本機 smtp 模擬服務設定指引）
- - [X] T041 [US5] 在 `backend/tests/test_send_simulation.py` 實作模擬失敗測試（SMTP 連線失敗、逾時、單位收件失敗）
- - [X] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
+- [X] T040 [P] [US5] 在 `backend/tests/conftest.py` 新增 SMTP 模擬 fixture（或使用第三方本機 smtp 模擬服務設定指引）
+- [X] T041 [US5] 在 `backend/tests/test_send_simulation.py` 實作模擬失敗測試（SMTP 連線失敗、逾時、單位收件失敗）
+- [X] T042 [US5] 在 `specs/001-release-announcements/quickstart.md` 新增如何在本機模擬 SMTP（MailHog / smtpd 範例）
 - [X] T043 [US5] [P] 新增 CI 測試腳本樣板 `/.github/workflows/ci.yml`（含 pytest 基本步驟，視專案需求決定是否立即啟用）
-
 - [X] T048 [US5] E2E latency test — 建立簡單的端對端測試腳本測量從建立 Release 到發送完成的平均時間（範例資料與 repeat runs），以驗證 SC-001（平均 <= 3 分鐘）。
 - [X] T049 [US5] SendLog query perf test — 在測試資料庫建立至少 1000 筆 `SendLog` 範例資料，驗證 `GET /send_logs` 在典型過濾條件下回應時間 < 2s，並在超過時產生優化紀錄。
 
